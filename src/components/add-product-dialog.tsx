@@ -128,10 +128,10 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[640px] max-h-[90vh] scrollbar-hide overflow-y-auto bg-gradient-to-r from-violet-300 to-purple-400 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-white">
+      <DialogContent className="sm:max-w-[640px] max-h-[90vh] scrollbar-hide overflow-y-auto bg-gradient-to-r from-violet-100 to-purple-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-white">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit Product" : "Add New Product"}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-purple-700">{isEdit ? "Edit Product" : "Add New Product"}</DialogTitle>
+          <DialogDescription className="text-purple-700">
             {isEdit ? "Update the product details." : "Fill in the detailed product information."}
           </DialogDescription>
         </DialogHeader>
@@ -200,7 +200,7 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
                       </div>
                     ))}
                   </div>
-                  <FormDescription>Select one or more sizes.</FormDescription>
+                  <FormDescription className="text-purple-700">Select one or more sizes.</FormDescription>
                   <FormMessage className="text-red-700" />
                 </FormItem>
               )}

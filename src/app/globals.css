@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -51,12 +51,10 @@
     --primary-foreground: 0 0% 100%;
   }
 }
-html {
-  font-family: var(--font-geist-sans);
-}
+
 
 body{
-  font-family: "Pacifico", cursive;
+   font-family: "Roboto Slab", serif;
   font-weight: 400;
   font-style: normal;
 }
