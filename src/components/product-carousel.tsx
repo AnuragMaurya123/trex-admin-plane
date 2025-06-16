@@ -56,7 +56,7 @@ export function ProductCarousel({ products }: ProductCarouselProps) {
                     </div>
                     
                     {/* Product Name */}
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white text-center truncate">
                       {product.name}
                     </h3>
                     

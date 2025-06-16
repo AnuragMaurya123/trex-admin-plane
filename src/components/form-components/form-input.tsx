@@ -27,7 +27,7 @@ export default function FormInput<T extends FieldValues>({
                 <FormItem>
                     <FormLabel className={className}>{label}</FormLabel>
                     <FormControl>
-                        <Input placeholder={placeHolder} type={type} autoComplete="off" {...field} className={`${className} h-11 focus-visible:ring-purple-500`} />
+                        <Input placeholder={placeHolder} type={type} autoComplete="off" {...field} className={`${className} h-11 `} />
                     </FormControl>
                     <FormMessage className="text-red-600"/>
                 </FormItem>

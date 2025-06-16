@@ -63,7 +63,7 @@ export interface ProductCarouselProps {
 
 
 // Main Category
-export type ProductCategory = "Men" | "Women" | "Kids"
+export type ProductCategory = "Men" | "Women" |  "Couples" | "Fabric Jewellery"
 
 // Detailed Enums for Clothing
 export type Fabric = "Cotton" | "Polyester" | "Silk" | "Linen" | "Denim" | "Wool"
@@ -73,9 +73,10 @@ export type Style = "A-Line" | "Shift" | "Bodycon" | "Fit & Flare" | "Maxi" | "T
 export type SleeveLength = "Sleeveless" | "Short Sleeve" | "Half Sleeve" | "Full Sleeve"
 export type Neck = "Round Neck" | "V-Neck" | "Polo" | "Turtleneck" | "Boat Neck"
 export type Size = "XS" | "S" | "M" | "L" | "XL" | "XXL"
+export type SubCategory = "Dresses" | "Co-ord Set" | "Tops" | "Kurta Set" | "Jumpsuits" | "Tshirts" | "Ethnic Wear" | "Printed Shirts"
 
 // Exporting arrays for use in select dropdowns
-export const CATEGORIES: ProductCategory[] = ["Men", "Women", "Kids"]
+export const CATEGORIES: ProductCategory[] = ["Men", "Women", "Couples" , "Fabric Jewellery"]
 export const FABRICS: Fabric[] = ["Cotton", "Polyester", "Silk", "Linen", "Denim", "Wool"]
 export const OCCASIONS: Occasion[] = ["Casual", "Formal", "Party", "Sportswear", "Ethnic"]
 export const PATTERNS: PatternAndPrint[] = ["Solid", "Striped", "Checked", "Floral", "Graphic Print"]
@@ -83,6 +84,7 @@ export const STYLES: Style[] = ["A-Line", "Shift", "Bodycon", "Fit & Flare", "Ma
 export const SLEEVE_LENGTHS: SleeveLength[] = ["Sleeveless", "Short Sleeve", "Half Sleeve", "Full Sleeve"]
 export const NECKS: Neck[] = ["Round Neck", "V-Neck", "Polo", "Turtleneck", "Boat Neck"]
 export const SIZES: Size[] = ["XS", "S", "M", "L", "XL", "XXL"]
+export const SUBCATEGORIES: SubCategory[] = ["Dresses" , "Co-ord Set" , "Tops" , "Kurta Set" , "Jumpsuits" , "Tshirts" , "Ethnic Wear" , "Printed Shirts"]
 
 // The new, comprehensive Product type
 export type Product = {
@@ -91,7 +93,7 @@ export type Product = {
   description: string
   newArrivals: boolean
   category: ProductCategory
-  subcategory: string // e.g., "T-Shirts", "Jeans", "Dresses"
+  subcategory:SubCategory // e.g., "T-Shirts", "Jeans", "Dresses"
   fabric: Fabric
   occasion: Occasion
   patternAndPrint: PatternAndPrint

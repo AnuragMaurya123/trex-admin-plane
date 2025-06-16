@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import { useState } from "react";
@@ -36,6 +36,7 @@ import {
   NECKS,
   SIZES,
   type Product,
+  SUBCATEGORIES,
 } from "@/lib/types";
 import FormSelect from "./form-components/form-select";
 import FormInput from "./form-components/form-input";
@@ -128,10 +129,10 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[640px] max-h-[90vh] scrollbar-hide overflow-y-auto bg-gradient-to-r from-violet-100 to-purple-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-white">
+      <DialogContent className="sm:max-w-[640px] max-h-[90vh] scrollbar-hide overflow-y-auto bg-white dark:bg-slate-800 shadow-2xl shadow-purple-400 border-white">
         <DialogHeader>
-          <DialogTitle className="text-purple-700">{isEdit ? "Edit Product" : "Add New Product"}</DialogTitle>
-          <DialogDescription className="text-purple-700">
+          <DialogTitle className="text-black dark:text-white">{isEdit ? "Edit Product" : "Add New Product"}</DialogTitle>
+          <DialogDescription className="text-black dark:text-white">
             {isEdit ? "Update the product details." : "Fill in the detailed product information."}
           </DialogDescription>
         </DialogHeader>
@@ -139,8 +140,9 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
             {/* ---- Name & Subcategory ---- */}
             <div className="grid grid-cols-2 gap-4">
-              <FormInput control={form.control} label="Name*" name="name" placeHolder="Enter Product Name" type="text" className="text-purple-700 font-bold dark:text-white dark:border-white" />
-              <FormInput control={form.control} label="Sub Category" name="subcategory" placeHolder="e.g., T‑Shirts, Jeans" type="text" className="text-purple-700 font-bold dark:text-white dark:border-white" />
+              <FormInput control={form.control} label="Name*" name="name" placeHolder="Enter Product Name" type="text" className="text-black font-bold dark:text-white dark:border-white" />
+               <FormSelect control={form.control} label="Category*" name="category" options={CATEGORIES} externalClassName="text-black font-bold dark:text-white dark:border-white" />
+             
             </div>
 
             {/* ---- Description ---- */}
@@ -149,9 +151,9 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-purple-700 font-bold dark:text-white">Description</FormLabel>
+                  <FormLabel className="text-black font-bold dark:text-white">Description</FormLabel>
                   <FormControl>
-                    <Textarea {...field} rows={3} className="border-purple-700 dark:border-white focus-visible:ring-purple-500" />
+                    <Textarea {...field} rows={3} className=" dark:border-white" />
                   </FormControl>
                 </FormItem>
               )}
@@ -159,21 +161,21 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
 
             {/* ---- Selects Row 1 ---- */}
             <div className="grid grid-cols-2 gap-4">
-              <FormSelect control={form.control} label="Category*" name="category" options={CATEGORIES} externalClassName="text-purple-700 font-bold dark:text-white dark:border-white" />
-              <FormSelect control={form.control} label="Fabric" name="fabric" options={FABRICS} externalClassName="text-purple-700 font-bold dark:text-white dark:border-white" />
+              <FormSelect control={form.control} label="Sub Category*" name="subcategory" options={SUBCATEGORIES} externalClassName="text-black font-bold dark:text-white dark:border-white" />
+              <FormSelect control={form.control} label="Fabric" name="fabric" options={FABRICS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
             </div>
             {/* ---- Selects Row 2 ---- */}
             <div className="grid grid-cols-2 gap-4">
-              <FormSelect control={form.control} label="Occasion" name="occasion" options={OCCASIONS} externalClassName="text-purple-700 font-bold dark:text-white dark:border-white" />
-              <FormSelect control={form.control} label="Pattern & Print" name="patternAndPrint" options={PATTERNS} externalClassName="text-purple-700 font-bold dark:text-white dark:border-white" />
+              <FormSelect control={form.control} label="Occasion" name="occasion" options={OCCASIONS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
+              <FormSelect control={form.control} label="Pattern & Print" name="patternAndPrint" options={PATTERNS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
             </div>
             {/* ---- Selects Row 3 ---- */}
             <div className="grid grid-cols-2 gap-4">
-              <FormSelect control={form.control} label="Style" name="style" options={STYLES} externalClassName="text-purple-700 font-bold dark:text-white dark:border-white" />
-              <FormSelect control={form.control} label="Sleeve Length" name="sleeveLength" options={SLEEVE_LENGTHS} externalClassName="text-purple-700 font-bold dark:text-white dark:border-white" />
+              <FormSelect control={form.control} label="Style" name="style" options={STYLES} externalClassName="text-black font-bold dark:text-white dark:border-white" />
+              <FormSelect control={form.control} label="Sleeve Length" name="sleeveLength" options={SLEEVE_LENGTHS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
             </div>
             {/* ---- Neck ---- */}
-            <FormSelect control={form.control} label="Neck" name="neck" options={NECKS} externalClassName="text-purple-700 font-bold dark:text-white dark:border-white" />
+            <FormSelect control={form.control} label="Neck" name="neck" options={NECKS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
 
             {/* ---- Sizes ---- */}
             <FormField
@@ -181,12 +183,12 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
               name="size"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-purple-700 font-bold dark:text-white">Available Sizes</FormLabel>
+                  <FormLabel className="text-black font-bold dark:text-white">Available Sizes</FormLabel>
                   <div className="grid grid-cols-6 gap-2 pt-2">
                     {SIZES.map((sz) => (
                       <div key={sz} className="flex items-center space-x-2">
                         <Checkbox
-                          className="text-purple-700 dark:border-white"
+                          className="text-black dark:border-white"
                           checked={field.value?.includes(sz)}
                           onCheckedChange={() => {
                             const current = field.value ?? [];
@@ -194,13 +196,13 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
                           }}
                           id={`size-${sz}`}
                         />
-                        <FormLabel htmlFor={`size-${sz}`} className="font-normal text-purple-700 dark:text-white">
+                        <FormLabel htmlFor={`size-${sz}`} className="font-normal text-black dark:text-white">
                           {sz}
                         </FormLabel>
                       </div>
                     ))}
                   </div>
-                  <FormDescription className="text-purple-700">Select one or more sizes.</FormDescription>
+                  <FormDescription className="text-black dark:text-white">Select one or more sizes.</FormDescription>
                   <FormMessage className="text-red-700" />
                 </FormItem>
               )}
@@ -208,8 +210,8 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
 
             {/* ---- Price & Stock ---- */}
             <div className="grid grid-cols-2 gap-4">
-              <FormInput control={form.control} label="Price*" name="price" placeHolder="Enter Product Price" type="number" className="text-purple-700 font-bold dark:text-white dark:border-white" />
-              <FormInput control={form.control} label="Stock*" name="stock" placeHolder="Enter Product Stock" type="number" className="text-purple-700 font-bold dark:text-white dark:border-white" />
+              <FormInput control={form.control} label="Price*" name="price" placeHolder="Enter Product Price" type="number" className="text-black font-bold dark:text-white dark:border-white" />
+              <FormInput control={form.control} label="Stock*" name="stock" placeHolder="Enter Product Stock" type="number" className="text-black font-bold dark:text-white dark:border-white" />
             </div>
 
             {/* ---- New Arrivals ---- */}
@@ -219,10 +221,10 @@ export default function ProductDialog({ initialProduct, onSave, trigger }: Produ
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-2 space-y-0">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} className="border-purple-700 dark:border-white" />
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} className=" dark:border-white" />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel className="text-purple-700 font-bold dark:text-white">Mark as New Arrival</FormLabel>
+                    <FormLabel className="text-black font-bold dark:text-white">Mark as New Arrival</FormLabel>
                   </div>
                 </FormItem>
               )}
