@@ -1,58 +1,52 @@
-import { Control, FieldValues, Path } from "react-hook-form";
+
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 import {
   FormControl,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+} from '@/components/ui/form';
 
 interface FormSelectProps<T extends FieldValues> {
-  control: Control<T>;
   name: Path<T>;
+  control: Control<T>;
   label: string;
-  options: string[];
-  externalClassName?:string;
+  options: readonly string[];
+  placeholder?: string;
 }
 
-const FormSelect = <T extends FieldValues>({
+export default function FormSelect<T extends FieldValues>({
+  control,
   name,
   label,
   options,
-  control,
-  externalClassName
-}: FormSelectProps<T>) => (
-  <FormField
-    control={control}
-    name={name}
-    render={({ field }) => (
-      <FormItem className="w-full">
-        <FormLabel className={externalClassName}>{label}</FormLabel>
-        <Select onValueChange={field.onChange} value={field.value ?? undefined}>
+  placeholder = "Select an option"
+}: FormSelectProps<T>) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field, fieldState }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
           <FormControl>
-            <SelectTrigger className={`w-full ${externalClassName ?? ""}`}>
-              <SelectValue placeholder={`Select ${label}`}  />
-            </SelectTrigger>
+            <select
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              {...field}
+            >
+              <option value="">{placeholder}</option>
+              {options.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </FormControl>
-          <SelectContent className={`${externalClassName} w-full`} >
-            {options.map((opt) => (
-              <SelectItem key={opt} value={opt}>
-                {opt}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <FormMessage className="text-red-700"/>
-      </FormItem>
-    )}
-  />
-);
-
-export default FormSelect;
+          {fieldState.error && (
+            <FormMessage>{fieldState.error.message}</FormMessage>
+          )}
+        </FormItem>
+      )}
+    />
+  );
+}

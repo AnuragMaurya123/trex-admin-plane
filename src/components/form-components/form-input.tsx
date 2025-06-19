@@ -1,35 +1,56 @@
-import { Control, FieldValues, Path } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Input } from "../ui/input";
+
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import {
+    FormControl,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+
 
 interface FormInputProps<T extends FieldValues> {
-    control: Control<T>;
     name: Path<T>;
+    control: Control<T>;
     label: string;
-    placeHolder: string;
     type?: string;
-    className?: string;
+    placeHolder?: string;
+    disabled?: boolean;
 }
 
 export default function FormInput<T extends FieldValues>({
     control,
     name,
     label,
+    type = 'text',
     placeHolder,
-    className = "",
-    type = "text"
+    disabled = false,
 }: FormInputProps<T>) {
     return (
-        <FormField
+        <Controller
             control={control}
             name={name}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
                 <FormItem>
-                    <FormLabel className={className}>{label}</FormLabel>
+                    <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Input placeholder={placeHolder} type={type} autoComplete="off" {...field} className={`${className} h-11 `} />
+                        <Input
+                            type={type}
+                            placeholder={placeHolder}
+                            disabled={disabled}
+                            {...field}
+                            value={field.value || ''}
+                            onChange={(e) => {
+                                const value = type === 'number' ?
+                                    (e.target.value === '' ? 0 : Number(e.target.value)) :
+                                    e.target.value;
+                                field.onChange(value);
+                            }}
+                        />
                     </FormControl>
-                    <FormMessage className="text-red-600"/>
+                    {fieldState.error && (
+                        <FormMessage>{fieldState.error.message}</FormMessage>
+                    )}
                 </FormItem>
             )}
         />

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
-import ReduxProvider from "@/components/redux-provider";
+import QueryProvider from "@/components/query-provider";
+import { ToastContainer } from 'react-toastify';
+import { Theme } from "@/components/theme";
 
 
 
@@ -16,13 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light">
+    <html lang="en" className="light" suppressHydrationWarning>
       <body
         className={`antialiased dark:text-white`}
       >
-        <ReduxProvider>      
+        <QueryProvider>
+          <Theme>
+            <ToastContainer />
             {children}
-        </ReduxProvider>
+          </Theme>
+        </QueryProvider>
       </body>
     </html>
   );

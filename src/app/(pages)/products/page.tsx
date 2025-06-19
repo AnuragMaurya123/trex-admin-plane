@@ -1,205 +1,280 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useState, useMemo } from "react";
-import {
-  CATEGORIES,
-  type Product,
-  type ProductCategory,
-} from "@/lib/types";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useMemo, useState } from "react";
 import {
   Package,
   DollarSign,
   Shirt,
   PlusCircle,
+  AlertTriangle,
+  Loader2,
 } from "lucide-react";
-import { INITIAL_PRODUCTS } from "@/lib/constants";
+
 import ProductDialog from "@/components/add-product-dialog";
 import { ProductTable } from "@/components/product-table";
+import KPICard from "@/components/kpl-card";
+
+import {
+  Card, CardContent,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
+import { useGetProduct } from "@/hooks/useGetProduct";
+import { CATEGORIES } from "@/lib/types/productType";
+import type {
+  Product,
+  ProductCategory,
+} from "@/lib/types/productType";
+import { useHasMounted } from "@/lib/useHasMounted";
+
+/* ----------------------------------------------------------- */
+/* helpers                                                     */
+/* ----------------------------------------------------------- */
+
+const stockOf = (p: Product) =>
+  p.variants?.reduce(
+    (sum, v) => sum + v.sizes.reduce((s, row) => s + row.stock, 0),
+    0,
+  ) ?? 0;
+
+const valueOf = (p: Product) =>
+  p.variants?.reduce(
+    (sum, v) =>
+      sum + v.sizes.reduce((s, row) => s + row.sellingPrice * row.stock, 0),
+    0,
+  ) ?? 0;
+
+/* ----------------------------------------------------------- */
+/* page component                                              */
+/* ----------------------------------------------------------- */
+
 export default function ProductManagementPage() {
-  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] =
-    useState<ProductCategory | "all">("all");
+  /* fetch --------------------------------------------------- */
+  const {
+    data: productsList,
+    isError,
+    isLoading,
+  } = useGetProduct();
 
-  /* ────────────────── CRUD handlers ────────────────── */
-  const handleAddProduct = (newP: Product) =>
-    setProducts((prev) => [newP, ...prev]);
+  /* local state --------------------------------------------- */
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<ProductCategory | "all">("all");
 
-  const handleDeleteProduct = (id: string) => {
-    if (window.confirm("Delete this product?")) {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-    }
-  };
+  /* always have an array, even while loading ---------------- */
+  const safeProducts: Product[] = productsList ?? [];
 
-  const handleUpdateProduct = (updated: Product) =>
-    setProducts((prev) =>
-      prev.map((p) => (p.id === updated.id ? updated : p))
+  /* search / category filter (hook runs in every render) ---- */
+  const filtered = useMemo(() => {
+    return safeProducts.filter((product) => {
+      const matchesSearch = product.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      const matchesCategory =
+        category === "all" || product.category === category;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [safeProducts, search, category]);
+
+  /* KPI numbers --------------------------------------------- */
+  const totalProducts = safeProducts.length;
+  const totalStock = safeProducts.reduce((s, p) => s + stockOf(p), 0);
+  const totalValue = safeProducts.reduce((s, p) => s + valueOf(p), 0);
+  const hasMounted = useHasMounted();
+
+  /* --------------------------------------------------------- */
+  /* conditional UI (after all hooks)                          */
+  /* --------------------------------------------------------- */
+  if (isLoading) {
+    return (
+      <CenteredGradientCard>
+        <Loader2 className="h-12 w-12 animate-spin text-purple-600 dark:text-purple-400" />
+        <p className="font-medium text-purple-700 dark:text-purple-300">
+          Loading products…
+        </p>
+      </CenteredGradientCard>
     );
+  }
 
-  /* ────────────────── Derived data ────────────────── */
-  const filtered = useMemo(
-    () =>
-      products
-        .filter((p) =>
-          p.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        .filter((p) =>
-          selectedCategory === "all" ? true : p.category === selectedCategory
-        ),
-    [products, searchTerm, selectedCategory]
-  );
+  if (isError) {
+    return (
+      <CenteredGradientCard error>
+        <AlertTriangle className="h-12 w-12 text-red-500 dark:text-red-400" />
+        <p className="font-medium text-red-700 dark:text-red-300">
+          Failed to load products
+        </p>
+      </CenteredGradientCard>
+    );
+  }
 
-  const totalProducts = products.length;
-  const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
-  const totalValue = products.reduce(
-    (sum, p) => sum + p.price * p.stock,
-    0
-  );
+  if (totalProducts === 0) {
+    return (
+      <CenteredGradientCard>
+        <p className="font-medium text-purple-700 dark:text-purple-300 mb-4">
+          No products yet – add your first one!
+        </p>
+        <ProductDialog
+          trigger={
+            <Button className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Product
+            </Button>
+          }
+        />
+      </CenteredGradientCard>
+    );
+  }
 
-  /* ────────────────── UI ────────────────── */
+  /* --------------------------------------------------------- */
+  /* render main page                                          */
+  /* --------------------------------------------------------- */
   return (
-    <div className="min-h-screen bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-4 sm:p-6 lg:p-8">
-      {/* Page header */}
+    <div className="min-h-screen bg-muted/40 p-4 sm:p-6 lg:p-8
+                    bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+
+      {/* heading */}
       <header className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl font-extrabold
+                       bg-gradient-to-r from-purple-600 to-purple-400
+                       bg-clip-text text-transparent">
           Clothing Product Management
         </h1>
-        <p className="text-sm sm:text-base bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-          Manage your apparel inventory and view product details.
+        <p className="text-sm bg-gradient-to-r from-purple-600 to-purple-400
+                      bg-clip-text text-transparent">
+          Manage your apparel inventory and view product details
         </p>
       </header>
 
       {/* KPI cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
-        <StatsCard
+        <KPICard
           title="Total Products"
-          icon={<Shirt className="size-8 text-slate-200" />}
           value={totalProducts}
+          icon={<Shirt className="h-9 w-9 text-slate-200" />}
           subtitle={
             filtered.length !== totalProducts
-              ? `${filtered.length} matching current filters`
+              ? `${filtered.length} matching filters`
               : "All products listed"
           }
         />
-
-        <StatsCard
+        <KPICard
           title="Total Stock"
-          icon={<Package className="size-8 text-slate-200" />}
-          value={totalStock.toLocaleString()}
-          subtitle="Across all products"
+          value={hasMounted
+            ? totalStock.toLocaleString("en-IN")
+            : totalStock}
+        icon={<Package className="h-9 w-9 text-slate-200" />}
+        subtitle="Across all variants"
         />
-
-        <StatsCard
+        <KPICard
           title="Total Inventory Value"
-          icon={<DollarSign className="size-8 text-slate-200" />}
-          value={`$${totalValue.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
+          value={hasMounted
+            ? totalValue.toLocaleString("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 0,
+          }):totalProducts}
+          icon={<DollarSign className="h-9 w-9 text-slate-200" />}
           subtitle="Estimated current value"
         />
       </div>
 
-      {/* Filter bar */}
-      <Card className="mb-6 bg-gradient-to-r from-violet-500/10 to-purple-500/10 dark:from-slate-800/40">
-  <CardContent className="p-4 sm:p-6">
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      
-      {/* Search + category select */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center w-full sm:w-auto flex-1">
-        <Input
-          type="search"
-          placeholder="Search products…"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full sm:w-[260px] bg-white text-slate-800"
-        />
+      {/* filters */}
+      <Card className="mb-6 bg-gradient-to-r from-violet-500/10 to-purple-500/10
+                       backdrop-blur-sm border-white dark:from-slate-800">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+              <Input
+                type="search"
+                placeholder="Search products…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 bg-white border-white text-slate-800
+                           focus-visible:ring-purple-700 dark:text-black"
+              />
+              <Select
+                value={category}
+                onValueChange={(v) =>
+                  setCategory(v as ProductCategory | "all")}
+              >
+                <SelectTrigger
+                  className="min-w-[9rem] bg-gradient-to-r from-purple-500 to-purple-600
+                             border-white text-white ">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent
+                  className="bg-gradient-to-r from-violet-400 to-purple-500
+                             border-white dark:from-slate-900">
+                  <SelectItem value="all" className="text-white">
+                    All
+                  </SelectItem>
+                  {CATEGORIES.map((c) => (
+                    <SelectItem key={c} value={c} className="text-white">
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <Select
-          value={selectedCategory}
-          onValueChange={(v) =>
-            setSelectedCategory(v as ProductCategory | "all")
-          }
-        >
-          <SelectTrigger className="w-full sm:w-[180px] bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-            <SelectValue placeholder="Filter category" />
-          </SelectTrigger>
-          <SelectContent className="bg-violet-500 text-white">
-            <SelectItem value="all">All Categories</SelectItem>
-            {CATEGORIES.map((c) => (
-              <SelectItem key={c} value={c}>
-                {c}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+            <ProductDialog
+              trigger={
+                <Button className="w-full sm:w-auto bg-gradient-to-r
+                                   from-purple-500 to-purple-600 text-white">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  <span className="hidden sm:inline">Add Product</span>
+                  <span className="sm:hidden">Add</span>
+                </Button>
+              }
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* table */}
+      <div className="overflow-x-auto rounded-lg shadow-inner">
+        <ProductTable products={filtered} />
       </div>
-
-      {/* Button wrapper to fix alignment */}
-      <div className="w-full sm:w-auto">
-        <ProductDialog
-          trigger={
-            <Button className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-          }
-          onSave={handleAddProduct}
-        />
-      </div>
-    </div>
-  </CardContent>
-</Card>
-
-
-      {/* Data table */}
-      <ProductTable
-        products={filtered}
-        onDeleteProduct={handleDeleteProduct}
-        onUpdateProduct={handleUpdateProduct}
-      />
     </div>
   );
 }
 
-/* ──────── StatsCard sub‑component ──────── */
-const StatsCard = ({
-  title,
-  icon,
-  value,
-  subtitle,
+/* ---------- tiny helper to DRY the loading / error / empty UI ---------- */
+
+function CenteredGradientCard({
+  children,
+  error = false,
 }: {
-  title: string;
-  icon: React.ReactNode;
-  value: string | number;
-  subtitle?: string;
-}) => (
-  <Card className="bg-gradient-to-r from-purple-500 to-purple-600 shadow-lg hover:shadow-2xl transition-transform hover:scale-[1.03] border-0">
-    <CardHeader className="flex flex-row items-center justify-between pb-2">
-      <CardTitle className="text-white text-sm">{title}</CardTitle>
-      {icon}
-    </CardHeader>
-    <CardContent className="text-slate-200">
-      <div className="text-2xl font-bold">{value}</div>
-      {subtitle && (
-        <p className="text-xs mt-1 text-slate-300">{subtitle}</p>
-      )}
-    </CardContent>
-  </Card>
-);
+  children: React.ReactNode;
+  error?: boolean;
+}) {
+  const gradient = error
+    ? "from-red-50 via-white to-orange-50 dark:from-slate-900 dark:via-slate-800 dark:to-red-900/30"
+    : "from-purple-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900/30";
+
+  return (
+    <div
+      className={`flex h-96 items-center justify-center rounded-xl
+                  bg-gradient-to-br ${gradient}
+                  shadow-lg border
+                  ${error
+          ? "border-red-100 dark:border-red-800/30"
+          : "border-purple-100 dark:border-purple-800/30"}`}
+    >
+      <div
+        className={`flex flex-col items-center space-y-4 rounded-xl
+                    bg-white/80 p-8 shadow-xl backdrop-blur-md
+                    ${error ? "dark:bg-red-950/50"
+            : "dark:bg-slate-800/80"}`}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}

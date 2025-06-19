@@ -10,9 +10,7 @@ import {
 } from "recharts";
 import { AreaChart as AreaChartIcon } from "lucide-react";
 import CustomTooltip from "./custom-tooltip";
-import { GraphDiagramProps } from "@/lib/types";
-
-
+import { GraphDiagramProps } from "@/lib/types/pieDiagramsType";
 
 const GraphDiagram: React.FC<GraphDiagramProps> = ({
   title,

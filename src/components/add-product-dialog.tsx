@@ -1,11 +1,12 @@
+"use client"
 
-"use client";
+import type React from "react"
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import { useForm, useFieldArray, type SubmitHandler } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { PlusCircle } from "lucide-react"
+
 import {
   Dialog,
   DialogContent,
@@ -14,234 +15,196 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  CATEGORIES,
-  FABRICS,
-  OCCASIONS,
-  PATTERNS,
-  STYLES,
-  SLEEVE_LENGTHS,
-  NECKS,
-  SIZES,
-  type Product,
-  SUBCATEGORIES,
-} from "@/lib/types";
-import FormSelect from "./form-components/form-select";
-import FormInput from "./form-components/form-input";
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
+import { Accordion } from "@/components/ui/accordion"
+import type { Product, Size } from "@/lib/types/productType"
+import { productSchema, type ProductFormValues } from "@/validationSchema/productSchema"
+import { EMPTY_VARIANT } from "@/lib/constants/productVariantDefaultValue"
+import { mapVariantToPayload } from "@/helper/stringOrUndefinedEnum"
+import { useCreateProduct } from "@/hooks/useCreateProduct"
+import { useUpdateProduct } from "@/hooks/useUpdateProduct"
+import ProductBasics from "./form-components/product-basics"
+import VariantCard from "./variant-card"
+import type { NewProduct } from "@/lib/types/reactComponentsProps"
 
-// ------------------- Schema -------------------
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name is required" }),
-  subcategory: z.string().optional(),
-  description: z.string().optional(),
-  category: z.string({ required_error: "Select a category" }),
-  fabric: z.string().optional(),
-  occasion: z.string().optional(),
-  patternAndPrint: z.string().optional(),
-  style: z.string().optional(),
-  sleeveLength: z.string().optional(),
-  neck: z.string().optional(),
-  size: z.array(z.string()).optional(),
-  price: z.coerce.number().min(0.01, { message: "Price is required" }),
-  stock: z.coerce.number().min(0, { message: "Stock is required" }),
-  newArrivals: z.boolean(),
-  imageUrl: z.string().url().optional(),
-});
-export type FormValues = z.infer<typeof formSchema>;
+export default function ProductDialog({
+  initialProduct,
+  trigger,
+}: {
+  initialProduct?: Product
+  trigger: React.ReactNode
+}) {
+  const [open, setOpen] = useState(false)
+  const isEdit = Boolean(initialProduct)
 
-// ------------------- Props -------------------
-interface ProductDialogProps {
-  /**
-   * If provided, dialog works in **edit** mode. Otherwise creates new product.
-   */
-  initialProduct?: Product;
-  /**
-   * Callback when user saves (add or edit).
-   */
-  onSave: (product: Product) => void;
-  /**
-   * Element that triggers the dialog (e.g. a Button).
-   */
-  trigger: React.ReactNode;
-}
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
+    defaultValues:
+      isEdit && initialProduct
+        ? {
+          ...initialProduct,
+          variants: initialProduct.variants?.map((v) => ({
+            ...EMPTY_VARIANT,
+            id: v.id,
+            color: v.color,
+            variantType: v.type,
+            neck: v.options?.neck,
+            sleeve: v.options?.sleeve ?? [],
+            fit: v.options?.fit ?? [],
+            waistRise: v.options?.waistRise ?? [],
+            thumbnail: v.thumbnail,
+            gallery: v.gallery,
+            sizes: Object.entries(v.sizes).map(([sz, val]) => ({
+              size: sz as Size,
+              marketPrice: val.marketPrice,
+              sellingPrice: val.sellingPrice,
+              stock: val.stock,
+            })),
+            selectedOptionTypes: [
+              ...(v.options?.sleeve?.length ? ["sleeve"] : []),
+              ...(v.options?.fit?.length ? ["fit"] : []),
+              ...(v.options?.waistRise?.length ? ["waistRise"] : []),
+            ] as ("sleeve" | "fit" | "waistRise")[],
+          })) ?? [EMPTY_VARIANT],
+        }
+        : {
+          name: "",
+          description: "",
+          category: "Men",
+          fabric: "Cotton",
+          occasion: "Casual",
+          patternAndPrint: "Solid",
+          style: "A-Line",
+          variants: [EMPTY_VARIANT],
+        },
+  })
 
-/**
- * Reusable dialog for **adding or editing** products.
- * - If `initialProduct` is passed, fields are pre‑filled and the submit button says "Update".
- * - Otherwise acts as an "Add New Product" dialog.
- */
-export default function ProductDialog({ initialProduct, onSave, trigger }: ProductDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const isEdit = Boolean(initialProduct);
+  const { control, handleSubmit, reset, watch } = form
 
-  // ------------------- Form -------------------
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: initialProduct ?? {
-      name: "",
-      subcategory: "",
-      description: "",
-      category: undefined,
-      price: 0,
-      stock: 0,
-      newArrivals: false,
-      size: [],
-      fabric: "",
-      imageUrl: "",
-      neck: "",
-      occasion: "",
-      patternAndPrint: "",
-      sleeveLength: "",
-      style: "",
-    },
-  });
+  const {
+    fields: variantFields,
+    append: appendVariant,
+    remove: removeVariant,
+    update: updateVariant,
+  } = useFieldArray({
+    control,
+    name: "variants",
+  })
 
-  // ------------------- Submit -------------------
-  const handleSubmit = (values: FormValues) => {
-    const product: Product = {
-      ...initialProduct, // keep id/dateAdded when editing
-      id: initialProduct?.id ?? `prod_${Date.now()}`,
-      dateAdded: initialProduct?.dateAdded ?? new Date().toISOString(),
-      imageUrl:
-        values.imageUrl ||
-        `/placeholder.svg?width=100&height=100&query=${encodeURIComponent(values.name)}`,
-      ...values,
-    } as Product;
+  const watchedVariants = watch("variants")
 
-    onSave(product);
-    form.reset();
-    setIsOpen(false);
-  };
+  const { mutate: createProduct, isPending: creating } = useCreateProduct()
+  const { mutate: updateProduct, isPending: updating } = useUpdateProduct()
 
-  // ------------------- UI -------------------
+  const onSubmit: SubmitHandler<ProductFormValues> = (data) => {
+    const variants = data.variants.map(mapVariantToPayload)
+
+    if (isEdit && initialProduct) {
+      updateProduct(
+        { ...initialProduct, ...data, variants },
+        {
+          onSuccess: () => {
+            setOpen(false)
+            reset()
+          },
+        },
+      )
+    } else {
+      const payload: NewProduct = {
+        ...data,
+        description: data.description ?? "",
+        dateAdded: new Date().toISOString(),
+        variants,
+      }
+      createProduct(payload, {
+        onSuccess: () => {
+          setOpen(false)
+          reset()
+        },
+      })
+    }
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[640px] max-h-[90vh] scrollbar-hide overflow-y-auto bg-white dark:bg-slate-800 shadow-2xl shadow-purple-400 border-white">
-        <DialogHeader>
-          <DialogTitle className="text-black dark:text-white">{isEdit ? "Edit Product" : "Add New Product"}</DialogTitle>
-          <DialogDescription className="text-black dark:text-white">
-            {isEdit ? "Update the product details." : "Fill in the detailed product information."}
+
+      <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide border-0 shadow-xl shadow-purple-300">
+        <DialogHeader >
+          <DialogTitle>{isEdit ? "Edit Product" : "Create New Product"}</DialogTitle>
+          <DialogDescription>
+            {isEdit
+              ? "Update the product details and manage its variants."
+              : "Fill in the product details and add one or more variants."}
           </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-            {/* ---- Name & Subcategory ---- */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormInput control={form.control} label="Name*" name="name" placeHolder="Enter Product Name" type="text" className="text-black font-bold dark:text-white dark:border-white" />
-               <FormSelect control={form.control} label="Category*" name="category" options={CATEGORIES} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-             
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 py-4">
+            <ProductBasics control={control} />
+
+            <div>
+              <h3 className="text-lg font-medium mb-4">Product Variants</h3>
+              <Accordion type="multiple" className="w-full mb-5 space-y-4" defaultValue={["item-0"]}>
+                {variantFields.map((variant, idx) => (
+                  <VariantCard
+                    key={variant.id}
+                    index={idx}
+                    variant={watchedVariants[idx]}
+                    control={control}
+                    remove={removeVariant}
+                    update={updateVariant}
+                  />
+                ))}
+              </Accordion>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-4"
+                onClick={() => appendVariant(EMPTY_VARIANT)}
+              >
+                <PlusCircle className="h-4 w-4 mr-2" /> Add Variant
+              </Button>
             </div>
 
-            {/* ---- Description ---- */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-black font-bold dark:text-white">Description</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} rows={3} className=" dark:border-white" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {/* ---- Selects Row 1 ---- */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormSelect control={form.control} label="Sub Category*" name="subcategory" options={SUBCATEGORIES} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-              <FormSelect control={form.control} label="Fabric" name="fabric" options={FABRICS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-            </div>
-            {/* ---- Selects Row 2 ---- */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormSelect control={form.control} label="Occasion" name="occasion" options={OCCASIONS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-              <FormSelect control={form.control} label="Pattern & Print" name="patternAndPrint" options={PATTERNS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-            </div>
-            {/* ---- Selects Row 3 ---- */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormSelect control={form.control} label="Style" name="style" options={STYLES} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-              <FormSelect control={form.control} label="Sleeve Length" name="sleeveLength" options={SLEEVE_LENGTHS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-            </div>
-            {/* ---- Neck ---- */}
-            <FormSelect control={form.control} label="Neck" name="neck" options={NECKS} externalClassName="text-black font-bold dark:text-white dark:border-white" />
-
-            {/* ---- Sizes ---- */}
-            <FormField
-              control={form.control}
-              name="size"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-black font-bold dark:text-white">Available Sizes</FormLabel>
-                  <div className="grid grid-cols-6 gap-2 pt-2">
-                    {SIZES.map((sz) => (
-                      <div key={sz} className="flex items-center space-x-2">
-                        <Checkbox
-                          className="text-black dark:border-white"
-                          checked={field.value?.includes(sz)}
-                          onCheckedChange={() => {
-                            const current = field.value ?? [];
-                            field.onChange(current.includes(sz) ? current.filter((s) => s !== sz) : [...current, sz]);
-                          }}
-                          id={`size-${sz}`}
-                        />
-                        <FormLabel htmlFor={`size-${sz}`} className="font-normal text-black dark:text-white">
-                          {sz}
-                        </FormLabel>
-                      </div>
-                    ))}
-                  </div>
-                  <FormDescription className="text-black dark:text-white">Select one or more sizes.</FormDescription>
-                  <FormMessage className="text-red-700" />
-                </FormItem>
-              )}
-            />
-
-            {/* ---- Price & Stock ---- */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormInput control={form.control} label="Price*" name="price" placeHolder="Enter Product Price" type="number" className="text-black font-bold dark:text-white dark:border-white" />
-              <FormInput control={form.control} label="Stock*" name="stock" placeHolder="Enter Product Stock" type="number" className="text-black font-bold dark:text-white dark:border-white" />
-            </div>
-
-            {/* ---- New Arrivals ---- */}
-            <FormField
-              control={form.control}
-              name="newArrivals"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-2 space-y-0">
-                  <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} className=" dark:border-white" />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel className="text-black font-bold dark:text-white">Mark as New Arrival</FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            {/* ---- Actions ---- */}
             <DialogFooter>
-              <Button type="button" variant="outline" className="border-red-500 text-red-600" onClick={() => setIsOpen(false)}>
+              <Button
+                type="button"
+                className="border-red-600 text-red-500 border"
+                onClick={() => {
+                  setOpen(false)
+                  reset()
+                }}
+              >
                 Cancel
               </Button>
-              <Button type="submit" className="bg-purple-700 text-white">
-                {isEdit ? "Update Product" : "Save Product"}
+              <Button
+                type="submit"
+                disabled={creating || updating}
+                className={
+                  creating || updating
+                    ? "bg-muted text-muted-foreground"
+                    : isEdit
+                      ? "bg-blue-600 hover:bg-blue-700 text-white"
+                      : "bg-purple-700 hover:bg-purple-900 text-white"
+                }
+              >
+                {creating || updating
+                  ? isEdit
+                    ? "Updating…"
+                    : "Saving…"
+                  : isEdit
+                    ? "Save Changes"
+                    : "Create Product"}
               </Button>
+
             </DialogFooter>
           </form>
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

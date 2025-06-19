@@ -5,7 +5,7 @@ import {
   CreditCard, MessageCircleWarning, Truck, Tag, Settings, Bell, User, BadgeIndianRupee
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import type { NavItem } from "@/lib/types";
+import { NavItem } from "@/lib/types/headerOptionType";
 
 interface SidebarProps {
   isOpen: boolean;

@@ -2,12 +2,9 @@
 
 import React from "react"
 // assumes you already have a toggle
-import { useAppSelector } from "@/store/hooks"
 import ModeToggle from "./mode-toggle"
 
 export default function Header() {
-    const { adminName } = useAppSelector((state) => state.admin);
-
   return (
     <div className="
       flex items-center justify-end w-full p-4 
@@ -28,7 +25,7 @@ export default function Header() {
               Welcome back,
             </div>
             <div className="text-lg font-bold text-slate-800 dark:text-slate-200">
-              {adminName || "User"}
+              { "User"}
             </div>
           </div>
 
@@ -47,7 +44,7 @@ export default function Header() {
             Welcome
           </div>
           <div className="text-sm font-bold text-slate-800 dark:text-slate-200">
-            {adminName || "User"}
+            { "User"}
           </div>
         </div>
       </div>

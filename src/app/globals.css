@@ -51,13 +51,11 @@
     --primary-foreground: 0 0% 100%;
   }
 }
-
-
-body{
-   font-family: "Roboto Slab", serif;
-  font-weight: 400;
-  font-style: normal;
+html {
+ font-family: "Roboto Slab", serif;
 }
+
+
 
 /* styles/globals.css or styles/tailwind.css */
 .scrollbar-hide {

@@ -2,7 +2,7 @@ import { PieChart } from "lucide-react";
 import { Cell, Pie, ResponsiveContainer, Tooltip, PieChart as RechartsPieChart } from "recharts";
 import CustomTooltip from "./custom-tooltip";
 import React from "react";
-import { PieDiagramProps } from "@/lib/types";
+import { PieDiagramProps } from "@/lib/types/pieDiagramsType";
 
 
 
