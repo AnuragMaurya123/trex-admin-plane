@@ -1,5 +1,5 @@
-import { EarningsDatum } from "../types";
-import { PieDatum } from "../types/pieDiagramsType";
+
+import { EarningsDatum, PieDatum } from "../types/pieDiagramsType";
 
   
 
