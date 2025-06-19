@@ -12,7 +12,7 @@ export default function KPICard({
   icon: React.ReactNode;
 }) {
   return (
-    <Card className="bg-gradient-to-r from-purple-500 to-purple-600 shadow-xl hover:scale-[1.02] hover:shadow-2xl border-0 transition-transform duration-200">
+    <Card className="bg-gradient-to-r from-purple-500 to-purple-600 shadow-xl pt-4 hover:scale-[1.02] hover:shadow-2xl border-0 transition-transform duration-200">
       <CardHeader className="flex items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-white">
           {title}

@@ -185,7 +185,7 @@ export default function ProductManagementPage() {
       </div>
 
       {/* filters */}
-      <Card className="mb-6 bg-gradient-to-r from-violet-500/10 to-purple-500/10
+      <Card className="mb-6 bg-gradient-to-r pt-4 from-violet-500/10 to-purple-500/10
                        backdrop-blur-sm border-white dark:from-slate-800">
         <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
