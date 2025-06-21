@@ -26,8 +26,8 @@ export default function AuthCheckWrapper({ children }: AuthCheckWrapperProps) {
         </header>
 
         {/* Main content area */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 transition-all duration-300 bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-          <div className="min-h-full w-full max-w-7xl mx-auto">
+        <main className="flex-1 px-5 py-5 overflow-y-auto  transition-all duration-300 bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+          <div className="min-h-full w-full  ">
             {children}
           </div>
         </main>

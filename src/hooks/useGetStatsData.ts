@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 // import axios from "axios";
-import { RangeOption, StatCardDatum, StatCardKey } from "@/lib/types/pieDiagramsType";
+import { StatCardDatum, StatCardKey } from "@/lib/types/pieDiagramsType";
 import { statsCardData } from "@/lib/constants/pieDiagramsData";
 
 
 // API call
-const fetchStats = async (): Promise<Record<RangeOption, Record<StatCardKey, StatCardDatum>>> => {
+const fetchStats = async (): Promise<Record<StatCardKey, StatCardDatum>> => {
   //   const response = await axios.post('/api/get-products'); // If your API expects POST
   //   if (!response.data?.product) {
   //     throw new Error('No products found');
@@ -17,7 +17,7 @@ const fetchStats = async (): Promise<Record<RangeOption, Record<StatCardKey, Sta
 
 // Hook
 export function useGetStatsData() {
-  return useQuery<Record<RangeOption, Record<StatCardKey, StatCardDatum>>, Error>({
+  return useQuery<Record<StatCardKey, StatCardDatum>, Error>({
     queryKey: ["stats"],
     queryFn: fetchStats,
     staleTime: 1000 * 60 * 5, // optional: cache for 5 min
