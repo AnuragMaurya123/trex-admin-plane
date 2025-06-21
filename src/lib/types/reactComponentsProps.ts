@@ -1,4 +1,4 @@
-import { Control, FieldArrayWithId, UseFieldArrayAppend } from "react-hook-form";
+import { Control, FieldArrayWithId, UseFieldArrayAppend, } from "react-hook-form";
 import { TopSellProduct } from "./dashboardSliderType";
 import { Product } from "./productType";
 import { ProductFormValues } from "@/validationSchema/productSchema";
@@ -35,4 +35,12 @@ export interface SizeSectionProps {
 
 export interface NewProduct extends Omit<Product, 'id'> {
   dateAdded: string;
+}
+
+export interface SizeSectionProps {
+  idx: number;
+  control: Control<ProductFormValues>;
+  sizeFields: FieldArrayWithId<ProductFormValues, `variants.${number}.sizes`, "id">[];
+  appendSize: UseFieldArrayAppend<ProductFormValues, `variants.${number}.sizes`>;
+  removeSize: (idx: number) => void;
 }

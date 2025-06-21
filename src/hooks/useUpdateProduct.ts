@@ -4,11 +4,14 @@ import axios from 'axios';
 
 // API service function
 async function updateProduct(product: Product): Promise<Product> {
+  console.log(product);
+  
   if (!product.id) {
     throw new Error('Product ID is required for update');
   }
 
   const response = await axios.put(`/api/products/${product.id}`, product);
+console.log(response);
 
   if (!response) {
     throw new Error(`Failed to update product`);
@@ -49,6 +52,7 @@ export function useUpdateProduct() {
     // 2️⃣  Roll back on error
     onError(_err, _vars, ctx) {
       if (ctx?.previousProducts) {
+        console.log(_err);
         queryClient.setQueryData(['products'], ctx.previousProducts);
       }
     },

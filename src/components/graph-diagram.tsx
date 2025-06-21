@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   ResponsiveContainer,
@@ -18,10 +20,9 @@ const GraphDiagram: React.FC<GraphDiagramProps> = ({
   xKey = "month",
   yKey = "earnings",
   className = "",
-  color = "#8b5cf6", // Tailwind violet‑600
+  color = "#8b5cf6",
   yFormatter,
 }) => {
-  // Build unique gradient id so multiple charts can coexist
   const gradientId = React.useId();
   const defaultFormatter = (v: number) => v.toLocaleString();
 

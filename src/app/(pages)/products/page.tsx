@@ -7,8 +7,6 @@ import {
   DollarSign,
   Shirt,
   PlusCircle,
-  AlertTriangle,
-  Loader2,
 } from "lucide-react";
 
 import ProductDialog from "@/components/add-product-dialog";
@@ -27,10 +25,13 @@ import { Button } from "@/components/ui/button";
 import { useGetProduct } from "@/hooks/useGetProduct";
 import { CATEGORIES } from "@/lib/types/productType";
 import type {
+  Category,
   Product,
-  ProductCategory,
 } from "@/lib/types/productType";
 import { useHasMounted } from "@/lib/useHasMounted";
+import { CenteredGradientCard } from "@/components/centered-gradient-card";
+import PageLoading from "@/components/page-loading";
+import PageError from "@/components/page-error";
 
 /* ----------------------------------------------------------- */
 /* helpers                                                     */
@@ -63,7 +64,7 @@ export default function ProductManagementPage() {
 
   /* local state --------------------------------------------- */
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<ProductCategory | "all">("all");
+  const [category, setCategory] = useState<Category | "all">("all");
 
   /* always have an array, even while loading ---------------- */
   const safeProducts: Product[] = productsList ?? [];
@@ -92,25 +93,11 @@ export default function ProductManagementPage() {
   /* conditional UI (after all hooks)                          */
   /* --------------------------------------------------------- */
   if (isLoading) {
-    return (
-      <CenteredGradientCard>
-        <Loader2 className="h-12 w-12 animate-spin text-purple-600 dark:text-purple-400" />
-        <p className="font-medium text-purple-700 dark:text-purple-300">
-          Loading products…
-        </p>
-      </CenteredGradientCard>
-    );
+   return <PageLoading/>
   }
 
   if (isError) {
-    return (
-      <CenteredGradientCard error>
-        <AlertTriangle className="h-12 w-12 text-red-500 dark:text-red-400" />
-        <p className="font-medium text-red-700 dark:text-red-300">
-          Failed to load products
-        </p>
-      </CenteredGradientCard>
-    );
+   return <PageError/>
   }
 
   if (totalProducts === 0) {
@@ -135,8 +122,7 @@ export default function ProductManagementPage() {
   /* render main page                                          */
   /* --------------------------------------------------------- */
   return (
-    <div className="min-h-screen bg-muted/40 p-4 sm:p-6 lg:p-8
-                    bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-muted/40 p-4 sm:p-6 lg:p-8">
 
       {/* heading */}
       <header className="mb-8">
@@ -201,7 +187,7 @@ export default function ProductManagementPage() {
               <Select
                 value={category}
                 onValueChange={(v) =>
-                  setCategory(v as ProductCategory | "all")}
+                  setCategory(v as Category | "all")}
               >
                 <SelectTrigger
                   className="min-w-[9rem] bg-gradient-to-r from-purple-500 to-purple-600
@@ -247,34 +233,3 @@ export default function ProductManagementPage() {
 
 /* ---------- tiny helper to DRY the loading / error / empty UI ---------- */
 
-function CenteredGradientCard({
-  children,
-  error = false,
-}: {
-  children: React.ReactNode;
-  error?: boolean;
-}) {
-  const gradient = error
-    ? "from-red-50 via-white to-orange-50 dark:from-slate-900 dark:via-slate-800 dark:to-red-900/30"
-    : "from-purple-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900/30";
-
-  return (
-    <div
-      className={`flex h-96 items-center justify-center rounded-xl
-                  bg-gradient-to-br ${gradient}
-                  shadow-lg border
-                  ${error
-          ? "border-red-100 dark:border-red-800/30"
-          : "border-purple-100 dark:border-purple-800/30"}`}
-    >
-      <div
-        className={`flex flex-col items-center space-y-4 rounded-xl
-                    bg-white/80 p-8 shadow-xl backdrop-blur-md
-                    ${error ? "dark:bg-red-950/50"
-            : "dark:bg-slate-800/80"}`}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}

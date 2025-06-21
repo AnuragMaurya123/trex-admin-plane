@@ -1,17 +1,10 @@
+
 import { VariantFormValues } from "@/validationSchema/productSchema";
 
 /** Blank variant ready for RHF `append()` */
-export const EMPTY_VARIANT: VariantFormValues = {
+export const EMPTY_VARIANT = {
   color: "",
-  variantType: undefined,   // single select
-  neck: undefined,          // single select
-  sleeve: [],               // multi select arrays
-  fit: [],
-  waistRise: [],
   sizes: [],
-
-  thumbnail: "",
+  thumbnail: "/placeholder.svg", // ← required default string
   gallery: [],
-
-  selectedOptionTypes: [],
-};
+} satisfies VariantFormValues; // Or inline type if needed

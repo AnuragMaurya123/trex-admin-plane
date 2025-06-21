@@ -1,33 +1,29 @@
-"use client"
+"use client";
 
-import Image from "next/image"
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Product } from "@/lib/types/productType"
+  Table, TableBody, TableCell, TableHead,
+  TableHeader, TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Product } from "@/lib/types/productType";
 
 /* ------------------------------------------------------------------ */
-/* props & helpers                                                    */
+/* helpers                                                            */
 /* ------------------------------------------------------------------ */
 
 interface VariantsDialogProps {
-  isOpen: boolean
-  onOpenChange: (o: boolean) => void
-  product: Product | null
+  isOpen: boolean;
+  onOpenChange: (o: boolean) => void;
+  product: Product | null;
 }
 
 const stockClasses = (s: number) =>
@@ -35,7 +31,7 @@ const stockClasses = (s: number) =>
     ? "bg-red-100 text-red-700 border-red-300 dark:bg-red-700/20 dark:text-red-300"
     : s < 10
     ? "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-700/20 dark:text-yellow-300"
-    : "bg-green-100 text-green-700 border-green-300 dark:bg-green-700/20 dark:text-green-300"
+    : "bg-green-100 text-green-700 border-green-300 dark:bg-green-700/20 dark:text-green-300";
 
 /* ------------------------------------------------------------------ */
 /* component                                                          */
@@ -46,11 +42,11 @@ export function VariantsDialog({
   onOpenChange,
   product,
 }: VariantsDialogProps) {
-  if (!product) return null
+  if (!product) return null;
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      {/* max‑w sets a hard ceiling; w‑full + sm/md/… keep it fluid */}
       <DialogContent className="w-full max-w-6xl h-[85vh] flex flex-col p-0 bg-white dark:bg-slate-900">
         {/* ---------- header ---------- */}
         <DialogHeader className="p-4 md:p-6 border-b border-slate-200 dark:border-slate-700">
@@ -62,7 +58,9 @@ export function VariantsDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {/* ---------- scrollable body ---------- */}
+        
+
+        {/* ---------- scrollable variant list ---------- */}
         <ScrollArea className="flex-1 p-4 md:p-6 space-y-6">
           {product.variants?.length ? (
             product.variants.map((variant, idx) => (
@@ -72,18 +70,11 @@ export function VariantsDialog({
               >
                 {/* top strip ------------------------------------------------ */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-purple-100 dark:bg-slate-800">
-                  <div>
-                    <h4 className="text-base md:text-lg font-semibold text-purple-700 dark:text-purple-400">
-                      {variant.color}
-                    </h4>
-                    {variant.type && (
-                      <p className="text-xs md:text-sm text-slate-600 dark:text-slate-300">
-                        {variant.type}
-                      </p>
-                    )}
-                  </div>
+                  <h4 className="text-base md:text-lg font-semibold text-purple-700 dark:text-purple-400">
+                    {variant.color}
+                  </h4>
 
-                  {/* image gallery: switches to horizontal scroll on small screens */}
+                  {/* image gallery ---------------------------------------- */}
                   {variant.gallery?.length ? (
                     <div className="flex sm:gap-4 overflow-x-auto sm:overflow-visible">
                       {variant.gallery.map((url, i) => (
@@ -101,30 +92,8 @@ export function VariantsDialog({
                   ) : null}
                 </div>
 
-                {/* variant meta + size table ------------------------------- */}
-                <div className="space-y-4 p-4">
-                  {/* meta grid: stacks on mobile, 3‑col from md up */}
-                  <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 text-sm">
-                    <Meta label="Neck" value={variant.options?.neck ?? "—"} />
-                    <Meta
-                      label="Sleeve"
-                      value={
-                        variant.options?.sleeve?.join(", ") || "—"
-                      }
-                    />
-                    <Meta
-                      label="Fit"
-                      value={variant.options?.fit?.join(", ") || "—"}
-                    />
-                    <Meta
-                      label="Waist Rise"
-                      value={
-                        variant.options?.waistRise?.join(", ") || "—"
-                      }
-                    />
-                  </div>
-
-                  {/* sizes table: horizontal scroll on small viewports */}
+                {/* size table --------------------------------------------- */}
+                <div className="p-4">
                   {variant.sizes?.length ? (
                     <div className="overflow-x-auto">
                       <Table className="text-xs md:text-sm min-w-[28rem]">
@@ -143,20 +112,16 @@ export function VariantsDialog({
                               className="hover:bg-slate-50 dark:hover:bg-slate-700/40"
                             >
                               <Td>{row.size}</Td>
-                              <Td align="right" >
+                              <Td align="right">
                                 {row.marketPrice.toLocaleString("en-IN")}
                               </Td>
-                              <Td
-                                align="right"
-                              >
+                              <Td align="right">
                                 {row.sellingPrice.toLocaleString("en-IN")}
                               </Td>
                               <Td align="right">
                                 <Badge
                                   variant="outline"
-                                  className={`${stockClasses(
-                                    row.stock,
-                                  )} px-2 py-0.5`}
+                                  className={`${stockClasses(row.stock)} px-2 py-0.5`}
                                 >
                                   {row.stock}
                                 </Badge>
@@ -182,30 +147,20 @@ export function VariantsDialog({
         </ScrollArea>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 /* ------------------------------------------------------------------ */
 /* tiny reusable pieces                                               */
 /* ------------------------------------------------------------------ */
 
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <strong className="font-medium text-slate-700 dark:text-slate-300">
-        {label}:
-      </strong>{" "}
-      <span className="text-slate-600 dark:text-slate-400">{value}</span>
-    </div>
-  )
-}
 
 function Th({
   children,
   align = "left",
 }: {
-  children: React.ReactNode
-  align?: "left" | "right"
+  children: React.ReactNode;
+  align?: "left" | "right";
 }) {
   return (
     <TableHead
@@ -215,15 +170,15 @@ function Th({
     >
       {children}
     </TableHead>
-  )
+  );
 }
 
 function Td({
   children,
   align = "left",
 }: {
-  children: React.ReactNode
-  align?: "left" | "right"
+  children: React.ReactNode;
+  align?: "left" | "right";
 }) {
   return (
     <TableCell
@@ -231,5 +186,5 @@ function Td({
     >
       {children}
     </TableCell>
-  )
+  );
 }

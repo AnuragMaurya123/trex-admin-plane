@@ -72,13 +72,17 @@ export function ProductTable({products}:{products:Product[]}) {
           <Table className="min-w-[1200px]">
             <TableHeader>
               <TableRow className="bg-gradient-to-r from-purple-500 to-purple-600 border-b-0">
-                <TableHead className="w-[100px] text-white font-semibold py-3 px-4">Image</TableHead>
-                <TableHead className="text-white font-semibold py-3 px-4 min-w-[250px]">Product</TableHead>
-                <TableHead className="text-white font-semibold py-3 px-4">Category</TableHead>
-                <TableHead className="text-white font-semibold py-3 px-4">Fabric</TableHead>
-                <TableHead className="text-white font-semibold py-3 px-4">Variants</TableHead>
-                <TableHead className="text-white font-semibold py-3 px-4">Date Added</TableHead>
-                <TableHead className="text-right text-white font-semibold py-3 px-4">Actions</TableHead>
+                <TableHead className="w-[100px] text-white font-semibold py-3 px-3">Image</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3 min-w-[250px]">Product</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Category</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Subcategory</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Pattern And Print</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Fabric</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Style</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Occassion</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Variants</TableHead>
+                <TableHead className="text-white font-semibold py-3 px-3">Date Added</TableHead>
+                <TableHead className="text-right text-white font-semibold py-3 px-3">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -89,7 +93,7 @@ export function ProductTable({products}:{products:Product[]}) {
                               ${index % 2 === 0 ? "bg-slate-50 dark:bg-slate-800/50" : "bg-white dark:bg-slate-900"}
                               hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors duration-150`}
                 >
-                  <TableCell className="py-3 px-4">
+                  <TableCell className="py-3 px-3">
                     <Image
                       src={
                         product.variants && product.variants[0]?.thumbnail ||
@@ -102,7 +106,7 @@ export function ProductTable({products}:{products:Product[]}) {
                       crossOrigin="anonymous"
                     />
                   </TableCell>
-                  <TableCell className="py-3 px-4">
+                  <TableCell className="py-3 px-3">
                     <div className="font-bold text-sm text-slate-800 dark:text-slate-100">{product.name}</div>
                     <div
                       className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-xs"
@@ -111,7 +115,7 @@ export function ProductTable({products}:{products:Product[]}) {
                       {product.description}
                     </div>
                   </TableCell>
-                  <TableCell className="py-3 px-4">
+                  <TableCell className="py-3 px-3">
                     <Badge
                       variant="outline"
                       className="border-indigo-300 text-indigo-700 bg-indigo-50 dark:border-indigo-700 dark:text-indigo-300 dark:bg-indigo-900/30 text-xs"
@@ -119,10 +123,22 @@ export function ProductTable({products}:{products:Product[]}) {
                       {product.category}
                     </Badge>
                   </TableCell>
-                  <TableCell className="py-3 px-4 text-sm text-slate-600 dark:text-slate-300">
+                  <TableCell className="py-3 px-3 text-sm text-slate-600 dark:text-slate-300">
+                    {product.subcategory}
+                  </TableCell>
+                  <TableCell className="py-3 px-3 text-sm text-slate-600 dark:text-slate-300">
+                    {product.patternAndPrint}
+                  </TableCell>
+                  <TableCell className="py-3 px-3 text-sm text-slate-600 dark:text-slate-300">
                     {product.fabric}
                   </TableCell>
-                  <TableCell className="py-3 px-4">
+                  <TableCell className="py-3 px-3 text-sm text-slate-600 dark:text-slate-300">
+                    {product.style}
+                  </TableCell>
+                  <TableCell className="py-3 px-3 text-sm text-slate-600 dark:text-slate-300">
+                    {product.occasion}
+                  </TableCell>
+                  <TableCell className="py-3 px-3">
                     <Button
                       variant="outline"
                       size="sm"
@@ -133,7 +149,7 @@ export function ProductTable({products}:{products:Product[]}) {
                       View ({product.variants ? product.variants.length : 0})
                     </Button>
                   </TableCell>
-                  <TableCell className="py-3 px-4 text-sm text-slate-600 dark:text-slate-300">
+                  <TableCell className="py-3 px-3 text-sm text-slate-600 dark:text-slate-300">
                     {hasMounted
                       ? new Date(product.dateAdded).toLocaleDateString("en-GB", {
                       year: "numeric",
@@ -142,7 +158,7 @@ export function ProductTable({products}:{products:Product[]}) {
                     })
                       : "Loading date..."}
                   </TableCell>
-                  <TableCell className="text-right py-3 px-4">
+                  <TableCell className="text-right py-3 px-3">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -166,8 +182,10 @@ export function ProductTable({products}:{products:Product[]}) {
                             <Button className="w-full sm:w-auto ">
                               <Edit3 className="mr-2 h-4 w-4" />
                               <span className="hidden sm:inline text-black">Edit Product</span>
+                              
                             </Button>
                           }
+                          initialProduct={product}
                         />
                         <DropdownMenuItem
                           onClick={() => handleDeleteProduct(product.id || "")}

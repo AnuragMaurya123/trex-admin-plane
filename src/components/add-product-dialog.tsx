@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import type React from "react"
@@ -19,7 +20,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { Accordion } from "@/components/ui/accordion"
-import type { Product, Size } from "@/lib/types/productType"
+import type { Product, SubCategory } from "@/lib/types/productType"
 import { productSchema, type ProductFormValues } from "@/validationSchema/productSchema"
 import { EMPTY_VARIANT } from "@/lib/constants/productVariantDefaultValue"
 import { mapVariantToPayload } from "@/helper/stringOrUndefinedEnum"
@@ -41,44 +42,28 @@ export default function ProductDialog({
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues:
-      isEdit && initialProduct
-        ? {
-          ...initialProduct,
-          variants: initialProduct.variants?.map((v) => ({
-            ...EMPTY_VARIANT,
-            id: v.id,
-            color: v.color,
-            variantType: v.type,
-            neck: v.options?.neck,
-            sleeve: v.options?.sleeve ?? [],
-            fit: v.options?.fit ?? [],
-            waistRise: v.options?.waistRise ?? [],
-            thumbnail: v.thumbnail,
-            gallery: v.gallery,
-            sizes: Object.entries(v.sizes).map(([sz, val]) => ({
-              size: sz as Size,
-              marketPrice: val.marketPrice,
-              sellingPrice: val.sellingPrice,
-              stock: val.stock,
-            })),
-            selectedOptionTypes: [
-              ...(v.options?.sleeve?.length ? ["sleeve"] : []),
-              ...(v.options?.fit?.length ? ["fit"] : []),
-              ...(v.options?.waistRise?.length ? ["waistRise"] : []),
-            ] as ("sleeve" | "fit" | "waistRise")[],
-          })) ?? [EMPTY_VARIANT],
-        }
-        : {
-          name: "",
-          description: "",
-          category: "Men",
-          fabric: "Cotton",
-          occasion: "Casual",
-          patternAndPrint: "Solid",
-          style: "A-Line",
-          variants: [EMPTY_VARIANT],
-        },
+    defaultValues: isEdit && initialProduct
+  ? {
+      ...initialProduct,
+      variants: initialProduct.variants?.map((v) => ({
+        id: v.id,
+        color: v.color,
+        thumbnail: v.thumbnail ?? "",
+        gallery: v.gallery ?? [],
+        sizes: v.sizes ?? [],
+      })) ?? [EMPTY_VARIANT],
+    }
+  : {
+      name: "",
+      description: "",
+      category: "Men",
+      subcategory: "T-Shirt", // You might want to dynamically select based on `category`
+      fabric: "Cotton",
+      occasion: "Casual",
+      patternAndPrint: "Solid",
+      style: "A-Line",
+      variants: [EMPTY_VARIANT],
+    }
   })
 
   const { control, handleSubmit, reset, watch } = form
@@ -98,34 +83,39 @@ export default function ProductDialog({
   const { mutate: createProduct, isPending: creating } = useCreateProduct()
   const { mutate: updateProduct, isPending: updating } = useUpdateProduct()
 
-  const onSubmit: SubmitHandler<ProductFormValues> = (data) => {
-    const variants = data.variants.map(mapVariantToPayload)
+ const onSubmit: SubmitHandler<ProductFormValues> = (data) => {
+    const variants = data.variants.map(mapVariantToPayload);
 
     if (isEdit && initialProduct) {
       updateProduct(
-        { ...initialProduct, ...data, variants },
+        { ...initialProduct, ...data, variants,subcategory:data.subcategory as SubCategory},
         {
           onSuccess: () => {
-            setOpen(false)
-            reset()
+            setOpen(false);
+            reset();
           },
         },
-      )
+      );
     } else {
       const payload: NewProduct = {
         ...data,
-        description: data.description ?? "",
         dateAdded: new Date().toISOString(),
+        subcategory:data.subcategory as SubCategory,
         variants,
-      }
+        description: data.description ?? "",
+      };
       createProduct(payload, {
         onSuccess: () => {
-          setOpen(false)
-          reset()
+          setOpen(false);
+          reset();
         },
-      })
+      });
     }
-  }
+  };
+
+  const onError = (errors: any) => {
+  console.log(" validation errors", errors);
+};
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -142,7 +132,7 @@ export default function ProductDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 py-4">
+          <form onSubmit={handleSubmit(onSubmit,onError)} className="space-y-8 py-4">
             <ProductBasics control={control} />
 
             <div>

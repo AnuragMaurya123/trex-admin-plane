@@ -1,10 +1,13 @@
-import { SizeSectionProps } from "@/lib/types/reactComponentsProps"
-import { FormLabel } from "../ui/form"
-import { SIZES } from "@/lib/types/productType"
-import FormInput from "./form-input"
-import { Button } from "../ui/button"
-import { X } from "lucide-react"
-import { cn } from "@/lib/utils"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { SizeSectionProps } from "@/lib/types/reactComponentsProps";
+import { FormLabel } from "../ui/form";
+import { SIZES } from "@/lib/types/productType";
+import FormInput from "./form-input";
+import { Button } from "../ui/button";
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ProductFormValues } from "@/validationSchema/productSchema";
+import { useFormContext } from "react-hook-form";
 
 export default function SizeSection({
   idx,
@@ -13,6 +16,14 @@ export default function SizeSection({
   removeSize,
   control,
 }: SizeSectionProps) {
+  const {
+    formState: { errors },
+  } = useFormContext<ProductFormValues>();
+
+  // Path: errors.variants?.[idx]?.sizes
+  const sizeError =
+    (errors.variants?.[idx] as any)?.sizes as { message?: string } | undefined;
+
   return (
     <div className="space-y-4">
       <FormLabel className="font-medium text-base">Sizes / Pricing / Stock</FormLabel>
@@ -20,17 +31,17 @@ export default function SizeSection({
       {/* Size toggle checkboxes */}
       <div className="flex flex-wrap gap-2">
         {SIZES.map((sz) => {
-          const isActive = sizeFields.find((r) => r.size === sz)
+          const isActive = sizeFields.find((r) => r.size === sz);
           return (
             <button
               type="button"
               key={sz}
               onClick={() => {
-                const idxRow = sizeFields.findIndex((r) => r.size === sz)
+                const idxRow = sizeFields.findIndex((r) => r.size === sz);
                 if (idxRow === -1) {
-                  appendSize({ size: sz, marketPrice: 0, sellingPrice: 0, stock: 0 })
+                  appendSize({ size: sz, marketPrice: 0, sellingPrice: 0, stock: 0 });
                 } else {
-                  removeSize(idxRow)
+                  removeSize(idxRow);
                 }
               }}
               className={cn(
@@ -42,46 +53,54 @@ export default function SizeSection({
             >
               {sz}
             </button>
-          )
+          );
         })}
-      </div>
 
+      </div>
+        {sizeError?.message && (
+              <p className="text-sm text-red-600">{sizeError.message}</p>
+            )}
       {/* Active size rows */}
       <div className="space-y-3">
         {sizeFields.map((row, rIdx) => (
           <div
             key={row.id}
-            className="grid grid-cols-1 sm:grid-cols-5 gap-3 items-end bg-muted/30 border rounded-lg p-3"
+            className="grid grid-cols-1 sm:grid-cols-5 gap-3 items-center bg-muted/30 border rounded-lg p-3"
           >
-            <div>
+            <div className="flex items-center">
               <span className="text-sm font-medium">{row.size}</span>
             </div>
+
             <FormInput
               control={control}
-              name={`variants.${idx}.sizes.${rIdx}.marketPrice`}
+              name={`variants.${idx}.sizes.${rIdx}.marketPrice` as const}
               type="number"
               label="Market ₹"
             />
             <FormInput
               control={control}
-              name={`variants.${idx}.sizes.${rIdx}.sellingPrice`}
+              name={`variants.${idx}.sizes.${rIdx}.sellingPrice` as const}
               type="number"
               label="Selling ₹"
             />
             <FormInput
               control={control}
-              name={`variants.${idx}.sizes.${rIdx}.stock`}
+              name={`variants.${idx}.sizes.${rIdx}.stock` as const}
               type="number"
               label="Stock"
             />
+
             <div className="flex justify-end">
               <Button variant="ghost" size="icon" onClick={() => removeSize(rIdx)}>
                 <X className="h-4 w-4 text-destructive" />
               </Button>
             </div>
+
+            {/* ✅ Show validation error when no size is selected */}
+            
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }

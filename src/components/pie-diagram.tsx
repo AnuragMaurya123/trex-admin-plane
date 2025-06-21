@@ -9,7 +9,7 @@ import { PieDiagramProps } from "@/lib/types/pieDiagramsType";
 const PieDiagram: React.FC<PieDiagramProps> = ({
   title,
   className = "",
-  statusData,
+  statusData = [],
   innerRadius = 40,
   outerRadius = 80,
   showLegend = true,
@@ -43,7 +43,7 @@ const PieDiagram: React.FC<PieDiagramProps> = ({
             paddingAngle={5}
             dataKey="value"
           >
-            {statusData.map((d, idx) => (
+            {statusData && statusData.map((d, idx) => (
               <Cell key={`cell-${idx}`} fill={d.color} />
             ))}
           </Pie>

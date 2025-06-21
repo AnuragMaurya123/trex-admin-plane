@@ -4,6 +4,7 @@ import { Control, Controller, Path } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
+import { FormMessage } from "../ui/form";
 
 export function GalleryUpload({
   control,
@@ -67,6 +68,7 @@ export function GalleryUpload({
                   className="w-48"
                 />
               )}
+              <FormMessage className='text-red-600' />
             </div>
           </div>
         );

@@ -1,3 +1,5 @@
+import { rangeOptions } from "../constants/pieDiagramsData";
+
 export interface PieDatum {
   name: string;
   value: number;
@@ -15,7 +17,7 @@ export interface PieDiagramProps {
 }
 
 export interface EarningsDatum {
-  month: string;
+  label: string;
   earnings: number;
 }
 
@@ -29,3 +31,13 @@ export interface GraphDiagramProps {
   color?: string;
   yFormatter?: (value: number) => string;
 }
+
+export type RangeOption = typeof rangeOptions[number];
+export type PieStatCategory = "orders" | "complaints" | "visitors" | "customers";
+export type StatCardKey = "orders" | "sales" | "products" | "visitors";
+
+export interface StatCardDatum {
+  value: number; 
+  total: number; 
+}
+
