@@ -15,7 +15,7 @@ import CustomTooltip from "./custom-tooltip";
 import { PieDiagramProps } from "@/lib/types/pieDiagramsType";
 
 /** Add a new optional prop */
-export type Size = "sm" | "md" ;
+export type Size = "sm" | "md" | "xs" ;
 
 interface Props extends PieDiagramProps {
   /** `md` by default; pass `"sm"` to shrink it (fits nicely beside the graph) */
@@ -27,6 +27,7 @@ interface Props extends PieDiagramProps {
 const sizes: Record<Size, { inner: number; outer: number; h: string }> = {
   sm: { inner: 15, outer: 30, h: "h-20" },
   md: { inner: 20, outer: 35 , h: "h-28" },
+  xs: { inner: 7, outer: 15 , h: "h-10" },
 };
 
 const defaultGradient =
@@ -53,15 +54,15 @@ const PieDiagram: React.FC<Props> = ({
       className={className}
     >
       <div
-        className={`rounded-2xl border border-slate-200 p-4 h-48 shadow-lg backdrop-blur-lg dark:border-slate-700 dark:bg-slate-800/80 bg-gradient-to-br ${gradient}`}
+        className={`rounded-2xl border border-slate-200 p-4 xl:h-48 sm:h-64 shadow-lg backdrop-blur-lg dark:border-slate-700 dark:bg-slate-800/80 bg-gradient-to-br ${gradient}`}
       >
         {title && (
-          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-purple-600 dark:text-purple-400">
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-purple-600 dark:text-purple-400 truncate">
             {showIcon && <PieIcon className="h-5 w-5" />} {title}
           </h3>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 items-start">
+        <div className="grid grid-cols-1 sm:grid-rows-2 xl:grid-cols-2 gap-0 items-start h-fit truncate">
           {/* chart */}
           <div className={`${cfg.h} w-full`}>
             <ResponsiveContainer width="100%" height="100%" >

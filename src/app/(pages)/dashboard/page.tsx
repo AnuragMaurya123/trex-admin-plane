@@ -23,7 +23,7 @@ export default function Dashboard() {
   const { data: statsCardData, isError: statsError, isLoading: statsIsLoading } = useGetStatsData();
   const { data: pieStatsData, isError: pieStatsError, isLoading: pieStatsIsLoading } = useGetPieStatsData();
   const { data: yearlyEarnings, isError: yearlyEarningsError, isLoading: yearlyEarningsIsLoading } = useGetEarningData();
-  const [size, setSize] = useState<"sm" | "md">("sm");
+  const [size, setSize] = useState<"sm" | "md" | "xs">("sm");
 
 
 
@@ -38,8 +38,10 @@ export default function Dashboard() {
       const width = window.innerWidth;
       if (width >= breakpoints.xl) {
         setSize("md");
-      } else {
+      }else if(width >= breakpoints.lg) {
         setSize("sm");
+      }else if(width >= breakpoints.md) {
+        setSize("xs");
       }
     };
 

@@ -47,13 +47,13 @@ const GraphDiagram: React.FC<GraphDiagramProps> = ({
       `}
     >
       {title && (
-        <h3 className="mb-4 flex items-center gap-2 text-base sm:text-lg font-bold text-purple-600 dark:text-purple-400">
+        <h3 className="mb-4 flex items-center gap-2 text-base sm:text-lg font-bold text-purple-600 dark:text-purple-400 ">
           <AreaChartIcon className="h-5 w-5" />
           {title}
         </h3>
       )}
 
-      <div className="h-[320px]">
+      <div className="xl:h-[320px] sm:h-[435px]">
         <ResponsiveContainer width="100%" height="100%">
           <RechartsAreaChart data={data}>
             <defs>
