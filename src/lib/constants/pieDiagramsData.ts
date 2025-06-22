@@ -63,7 +63,6 @@ export const statsCardData: Record<StatCardKey, StatCardDatum> = {
 
  export const yearlyEarnings: EarningsDatum[] = [
     { month: "Jan", earnings: 45_000 },
-    { month: "Jan", earnings: 45_000 },
     { month: "Feb", earnings: 52_000 },
     { month: "Mar", earnings: 48_000 },
     { month: "Apr", earnings: 61_000 },

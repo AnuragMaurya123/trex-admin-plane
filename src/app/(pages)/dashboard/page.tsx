@@ -1,14 +1,13 @@
 /* app/(pages)/dashboard/page.tsx */
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DollarSign,
   ShoppingCart,
   Package,
   Users,
 } from "lucide-react";
-
 import StatCard from "@/components/stat-card";
 import { TopProductTable } from "@/components/top-product-table";
 import { dummyProducts } from "@/lib/constants/dashboardSliderData";
@@ -24,6 +23,31 @@ export default function Dashboard() {
   const { data: statsCardData, isError: statsError, isLoading: statsIsLoading } = useGetStatsData();
   const { data: pieStatsData, isError: pieStatsError, isLoading: pieStatsIsLoading } = useGetPieStatsData();
   const { data: yearlyEarnings, isError: yearlyEarningsError, isLoading: yearlyEarningsIsLoading } = useGetEarningData();
+  const [size, setSize] = useState<"sm" | "md">("sm");
+
+
+
+  useEffect(() => {
+    const breakpoints = {
+      sm: 640,
+      md: 768,
+      lg: 1240,
+      xl: 1440,
+    }
+    const updateSize = () => {
+      const width = window.innerWidth;
+      if (width >= breakpoints.xl) {
+        setSize("md");
+      } else {
+        setSize("sm");
+      }
+    };
+
+    updateSize(); // initial run
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
 
   if (statsIsLoading || pieStatsIsLoading || yearlyEarningsIsLoading) {
     return <PageLoading />;
@@ -107,17 +131,17 @@ export default function Dashboard() {
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <PieDiagram statusData={pieStatsData.orders} title="Orders" size="sm" showLegend showIcon />
-            <PieDiagram statusData={pieStatsData.complaint} title="Complaints" size="sm" showLegend showIcon />
-            <PieDiagram statusData={pieStatsData.visitors} title="Visitors" size="sm" showLegend showIcon />
-            <PieDiagram statusData={pieStatsData.customers} title="Customers" size="sm" showLegend showIcon />
+            <PieDiagram statusData={pieStatsData.orders} title="Orders" size={size} showLegend showIcon />
+            <PieDiagram statusData={pieStatsData.complaint} title="Complaints" size={size} showLegend showIcon />
+            <PieDiagram statusData={pieStatsData.visitors} title="Visitors" size={size} showLegend showIcon />
+            <PieDiagram statusData={pieStatsData.customers} title="Customers" size={size} showLegend showIcon />
           </div>
         </section>
 
         {/* Top Products and Stock */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            
+
             <TopProductTable products={dummyProducts} />
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-4">
