@@ -29,7 +29,7 @@ const StatCard: React.FC<StatCardProps> = ({
       color,
       "border border-white/15 backdrop-blur-md",
       "shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl",
-      "min-h-[160px]",
+      "min-h-[160px] overflow-hidden",
     ].join(" ")}
   >
     {/* Header with title, today value, and icon (grid version) */}

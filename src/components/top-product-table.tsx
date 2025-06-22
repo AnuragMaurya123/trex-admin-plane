@@ -8,7 +8,7 @@ import { Badge } from "./ui/badge";
 
 export function TopProductTable({ products }: ProductCarouselProps) {
   return (
-      <div className="w-full bg-white p-6">
+      <div className="w-full bg-white dark:bg-slate-800 p-6">
         <h2 className="text-xl font-semibold mb-2 text-slate-700 dark:text-slate-200">Top Selling Products</h2>
       <div className=" border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-md overflow-auto">
         <Table>
