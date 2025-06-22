@@ -32,6 +32,7 @@ import { useHasMounted } from "@/lib/useHasMounted";
 import { CenteredGradientCard } from "@/components/centered-gradient-card";
 import PageLoading from "@/components/page-loading";
 import PageError from "@/components/page-error";
+import { useDebounce } from 'use-debounce';
 
 /* ----------------------------------------------------------- */
 /* helpers                                                     */
@@ -65,6 +66,8 @@ export default function ProductManagementPage() {
   /* local state --------------------------------------------- */
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<Category | "all">("all");
+ const [value] = useDebounce(search, 100);
+ const isDebouncing = search !== value;
 
   /* always have an array, even while loading ---------------- */
   const safeProducts: Product[] = productsList ?? [];
@@ -74,7 +77,7 @@ export default function ProductManagementPage() {
     return safeProducts.filter((product) => {
       const matchesSearch = product.name
         .toLowerCase()
-        .includes(search.toLowerCase());
+        .includes(value.toLowerCase());
 
       const matchesCategory =
         category === "all" || product.category === category;
@@ -99,6 +102,12 @@ export default function ProductManagementPage() {
   if (isError) {
    return <PageError/>
   }
+
+     if (isDebouncing) {
+  return <PageLoading />;
+}
+
+ 
 
   if (totalProducts === 0) {
     return (
@@ -142,20 +151,22 @@ export default function ProductManagementPage() {
         <KPICard
           title="Total Products"
           value={totalProducts}
-          icon={<Shirt className="h-9 w-9 text-slate-200" />}
+          icon={<Shirt className="h-9 w-9 text-slate-200 " />}
           subtitle={
             filtered.length !== totalProducts
               ? `${filtered.length} matching filters`
               : "All products listed"
           }
+          color="from-purple-500 to-purple-600"
         />
         <KPICard
           title="Total Stock"
           value={hasMounted
             ? totalStock.toLocaleString("en-IN")
             : totalStock}
-        icon={<Package className="h-9 w-9 text-slate-200" />}
+        icon={<Package className="h-9 w-9 text-slate-200 " />}
         subtitle="Across all variants"
+        color="from-yellow-500 to-orange-600"
         />
         <KPICard
           title="Total Inventory Value"
@@ -165,8 +176,9 @@ export default function ProductManagementPage() {
             currency: "INR",
             maximumFractionDigits: 0,
           }):totalProducts}
-          icon={<DollarSign className="h-9 w-9 text-slate-200" />}
+          icon={<DollarSign className="h-9 w-9 text-slate-200 " />}
           subtitle="Estimated current value"
+          color="from-green-500 to-emerald-600"
         />
       </div>
 
@@ -232,4 +244,3 @@ export default function ProductManagementPage() {
 }
 
 /* ---------- tiny helper to DRY the loading / error / empty UI ---------- */
-

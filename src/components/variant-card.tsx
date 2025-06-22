@@ -68,7 +68,7 @@ export default function VariantCard({
       className="rounded-lg border bg-slate-50 dark:bg-slate-800/40 overflow-hidden"
     >
       {/* ---------- Header row (NOT inside <button>) ---------- */}
-      <div className="flex items-center gap-4 px-4 py-3 text-white border-2 bg-gradient-to-r from-purple-500 to-purple-600 dark:border-slate-700/50 justify-between">
+      <div className="flex items-center gap-4 px-4 py-3 text-white bg-gradient-to-r from-purple-500 to-purple-600 dark:border-slate-700/50 justify-between">
         {/* drag handle + trigger */}
         <AccordionTrigger className="flex items-center gap-4 flex-1 hover:no-underline p-0">
           <GripVertical className="h-5 w-5 text-muted-foreground shrink-0" />

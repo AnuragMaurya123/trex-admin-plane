@@ -44,3 +44,11 @@ export interface SizeSectionProps {
   appendSize: UseFieldArrayAppend<ProductFormValues, `variants.${number}.sizes`>;
   removeSize: (idx: number) => void;
 }
+
+export interface KPICardProps {
+  title: string;
+  value: string | number;
+  subtitle: string;
+  icon: React.ReactNode;
+  color: string;
+}

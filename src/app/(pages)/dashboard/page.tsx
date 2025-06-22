@@ -35,7 +35,7 @@ export default function Dashboard() {
   console.log(yearlyEarnings);
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-slate-50 to-purple-100/40 p-4 sm:p-6 dark:from-slate-900 dark:to-purple-900/40">
+    <div className="min-h-screen ` bg-gradient-to-br from-slate-50 to-purple-100/40 p-4 sm:p-6 dark:from-slate-900 dark:to-purple-900/40">
       <div className="mx-auto w-full  space-y-12">
         {/* Header */}
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -71,6 +71,15 @@ export default function Dashboard() {
             color="from-green-500 to-emerald-600"
           />
           <StatCard
+            title="PRODUCTS"
+            today={statsCardData.products.today}
+            yesterday={statsCardData.products.yesterday}
+            week={statsCardData.products.week}
+            month={statsCardData.products.month}
+            icon={ShoppingCart}
+            color="from-yellow-500 to-orange-600"
+          />
+          <StatCard
             title="VISITORS"
             today={statsCardData.visitors.today}
             yesterday={statsCardData.visitors.yesterday}
@@ -78,15 +87,6 @@ export default function Dashboard() {
             month={statsCardData.visitors.month}
             icon={Users}
             color="from-blue-500 to-indigo-600"
-          />
-          <StatCard
-            title="PRODUCTS SOLD"
-            today={statsCardData.products.today}
-            yesterday={statsCardData.products.yesterday}
-            week={statsCardData.products.week}
-            month={statsCardData.products.month}
-            icon={ShoppingCart}
-            color="from-yellow-500 to-orange-600"
           />
         </section>
 
