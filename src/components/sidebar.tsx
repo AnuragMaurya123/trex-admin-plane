@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  Menu, ChevronLeft, LogOut, LayoutDashboard, Users, Package, ShoppingCart,
+  Menu, ChevronLeft, LayoutDashboard, Users, Package, ShoppingCart,
   CreditCard, MessageCircleWarning, Truck, Tag, Settings, Bell, User, BadgeIndianRupee
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -133,14 +133,6 @@ export default function Sidebar({ isOpen, setIsOpen, defaultCollapsed = false }:
           </div>
         </nav>
 
-        <div className="p-4 border-t border-slate-200 dark:border-slate-700">
-          <button
-            className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-xl text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 ${collapsed ? "justify-center" : ""}`}
-          >
-            <LogOut className="h-5 w-5" />
-            {!collapsed && <span>Logout</span>}
-          </button>
-        </div>
       </aside>
     </>
   );
