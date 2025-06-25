@@ -4,11 +4,14 @@ import React from "react";
 import ModeToggle from "./mode-toggle";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
+import { useLogout } from "@/hooks/useLogout";
+import PageLoading from "./page-loading";
+import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 
 export default function Header() {
-  const handleLogout = async () => {
-    // Add logout logic here
-  };
+  const { mutate: logout } = useLogout();
+  const { data: user } = useCurrentAdmin();
+ 
 
   return (
     <header
@@ -38,7 +41,7 @@ export default function Header() {
             Welcome back,
           </span>
           <span className="text-lg font-bold text-slate-900 dark:text-white">
-            User
+           {user?.name || "User"}
           </span>
         </div>
 
@@ -49,7 +52,7 @@ export default function Header() {
         <Button
           variant="default"
           size="sm"
-          onClick={handleLogout}
+          onClick={()=>logout()}
           className="
             flex items-center gap-2
             bg-gradient-to-r from-purple-600 to-violet-600
@@ -69,7 +72,7 @@ export default function Header() {
         <Button
           variant="default"
           size="icon"
-          onClick={handleLogout}
+          onClick={()=>logout()}
           className="
             bg-gradient-to-r from-purple-600 to-violet-600
             hover:from-purple-700 hover:to-violet-700

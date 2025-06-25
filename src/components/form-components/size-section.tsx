@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SizeSectionProps } from "@/lib/types/reactComponentsProps";
 import { FormLabel } from "../ui/form";
-import { SIZES } from "@/lib/types/productType";
 import FormInput from "./form-input";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductFormValues } from "@/validationSchema/productSchema";
 import { useFormContext } from "react-hook-form";
+import { useGetVariable } from "@/hooks/useGetVariable";
 
 export default function SizeSection({
   idx,
@@ -19,7 +19,7 @@ export default function SizeSection({
   const {
     formState: { errors },
   } = useFormContext<ProductFormValues>();
-
+ const { data: variable} = useGetVariable();
   // Path: errors.variants?.[idx]?.sizes
   const sizeError =
     (errors.variants?.[idx] as any)?.sizes as { message?: string } | undefined;
@@ -30,7 +30,7 @@ export default function SizeSection({
 
       {/* Size toggle checkboxes */}
       <div className="flex flex-wrap gap-2">
-        {SIZES.map((sz) => {
+        {variable?.sizes &&   variable?.sizes.map((sz) => {
           const isActive = sizeFields.find((r) => r.size === sz);
           return (
             <button

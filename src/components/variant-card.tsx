@@ -34,7 +34,7 @@ import { GalleryUpload } from "./form-components/gallery-upload";
  * – Header row: drag‑handle • title • delete
  * – Body: Core details, Sizing & stock, Media
  */
-export default function VariantCard({
+export default function  VariantCard({
   index,
   variant,
   control,

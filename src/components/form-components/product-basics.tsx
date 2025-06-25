@@ -1,15 +1,6 @@
-// components/product-basics.tsx
 "use client";
-import { useWatch, type Control} from "react-hook-form";
+import { useWatch, type Control } from "react-hook-form";
 import type { ProductFormValues } from "@/validationSchema/productSchema";
-import {
-  CATEGORIES,
-  FABRICS,
-  OCCASIONS,
-  getPatternsOption,
-  getStylesOption,
-  getSubCategoryOption,
-} from "@/lib/types/productType";
 
 import FormInput from "./form-input";
 import FormSelect from "./form-select";
@@ -29,17 +20,26 @@ import {
   CardTitle,
 } from "../ui/card";
 
+type ProductBasicsProps = {
+  control: Control<ProductFormValues>;
+  categoryOptions: string[];
+  subCategoryOptions: string[];
+  fabricOptions: string[];
+  occasionOptions: string[];
+  patternOptions: string[];
+  styleOptions: string[];
+};
+
 export default function ProductBasics({
   control,
-}: {
-  control: Control<ProductFormValues>;
-}) {
-  /* Watch the category so we can cascade‑reset subcategory when it changes */
+  categoryOptions,
+  subCategoryOptions,
+  fabricOptions,
+  occasionOptions,
+  patternOptions,
+  styleOptions,
+}: ProductBasicsProps) {
   const category = useWatch({ control, name: "category" });
-  /* If category changes and current subcategory is no longer valid, reset it */
-  const patterns = getPatternsOption(category);    
-  const styles = getStylesOption(category);
-  const subcategoryOptions= getSubCategoryOption(category)
 
   return (
     <Card>
@@ -51,9 +51,7 @@ export default function ProductBasics({
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* ───────────────────────────── */}
-        {/*  Row 1 – Name + Category      */}
-        {/* ───────────────────────────── */}
+        {/* Row 1 – Name + Fabric */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
             control={control}
@@ -61,58 +59,55 @@ export default function ProductBasics({
             label="Product Name*"
             placeHolder="e.g. Classic Cotton Tee"
           />
-            <FormSelect
+          <FormSelect
             control={control}
             name="fabric"
             label="Fabric"
-            options={FABRICS}
+            options={fabricOptions}
           />
-</div>
+        </div>
 
-          <FormSelect
-            control={control}
-            name="category"
-            label="Category*"
-            options={CATEGORIES}
-          />
+        {/* Category Dropdown */}
+        <FormSelect
+          control={control}
+          name="category"
+          label="Category*"
+          options={categoryOptions}
+        />
 
-
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Subcategory, Occasion, Pattern, Style */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormSelect
             control={control}
             name="subcategory"
             label="Subcategory*"
-            options={subcategoryOptions}
-            disabled={!category ? true : false}
+            options={subCategoryOptions}
+            disabled={!category}
             placeholder={category ? "Select…" : "Choose category first"}
           />
-         
-         
+
           <FormSelect
             control={control}
             name="occasion"
             label="Occasion"
-            options={OCCASIONS}
+            options={occasionOptions}
           />
           <FormSelect
             control={control}
             name="patternAndPrint"
             label="Pattern & Print"
-            options={patterns}
+            options={patternOptions}
           />
           <FormSelect
             control={control}
             name="style"
             label="Style"
-            options={styles}
-            disabled={!styles.length}   // disable if empty
+            options={styleOptions}
+            disabled={!styleOptions.length}
           />
-     
         </div>
 
-        {/* ───────────────────────────── */}
-        {/*  Description textarea         */}
-        {/* ───────────────────────────── */}
+        {/* Description */}
         <FormField
           control={control}
           name="description"
@@ -130,11 +125,6 @@ export default function ProductBasics({
             </FormItem>
           )}
         />
-
-        {/* ───────────────────────────── */}
-        {/*  Fabric ▸ Style 4‑up grid     */}
-        {/* ───────────────────────────── */}
-        
       </CardContent>
     </Card>
   );

@@ -25,13 +25,13 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { useGetProduct } from "@/hooks/useGetProduct";
-import { CATEGORIES } from "@/lib/types/productType";
-import type { Category, Product } from "@/lib/types/productType";
 import { useHasMounted } from "@/lib/useHasMounted";
 import { CenteredGradientCard } from "@/components/centered-gradient-card";
 import PageLoading from "@/components/page-loading";
 import PageError from "@/components/page-error";
 import { useDebounce } from "use-debounce";
+import { Product } from "@/lib/types/productType";
+import { useGetVariable } from "@/hooks/useGetVariable";
 
 /* ----------------------------------------------------------- */
 /* helpers                                                     */
@@ -57,10 +57,12 @@ const valueOf = (p: Product) =>
 export default function ProductManagementPage() {
   /* fetch --------------------------------------------------- */
   const { data: productsList, isError, isLoading } = useGetProduct();
+  
+    const { data: variable} = useGetVariable();
 
   /* local state --------------------------------------------- */
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<Category | "all">("all");
+  const [category, setCategory] = useState<"all">("all");
 
   // debounce the search term so we only filter after typing pauses
   const [debounced] = useDebounce(search.trim(), 500);
@@ -175,7 +177,7 @@ export default function ProductManagementPage() {
               />
               <Select
                 value={category}
-                onValueChange={(v) => setCategory(v as Category | "all")}
+                onValueChange={(v) => setCategory("all")}
               >
                 <SelectTrigger className="min-w-[9rem] bg-gradient-to-r from-purple-500 to-purple-600 border-white text-white">
                   <SelectValue placeholder="Category" />
@@ -184,7 +186,7 @@ export default function ProductManagementPage() {
                   <SelectItem value="all" className="text-white">
                     All
                   </SelectItem>
-                  {CATEGORIES.map((c) => (
+                  {variable?.catergory && variable?.catergory.map((c) => (
                     <SelectItem key={c} value={c} className="text-white">
                       {c}
                     </SelectItem>

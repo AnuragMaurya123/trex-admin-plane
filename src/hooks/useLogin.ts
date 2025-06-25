@@ -1,23 +1,30 @@
-import { useMutation } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
-import { AdminLoginInput } from '@/validationSchema/loginSchema';
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { AdminLoginInput } from "@/validationSchema/loginSchema";
 
+const login = async (values: AdminLoginInput): Promise<string> => {
+  const { data } = await axios.post<{
+    message: string;
+    data: {
+      accessToken: string;
+    };
+  }>(`${process.env.NEXT_PUBLIC_BACKEND_URL!}/admin/login`, values, {
+    withCredentials: true,
+    timeout: 10_000,
+  });
+  console.log(data);
 
-const login = async (values: AdminLoginInput):Promise<string> => {
-  const response = await axios.post(
-    "https://jsonplaceholder.typicode.com/users",
-    values,
-    { timeout: 10_000 }
-  );
-  return response.data.message;
+  localStorage.setItem("accessToken", data.data.accessToken);
+  return data.message;
 };
 
 export function useLogin() {
-  return useMutation<string,  AxiosError<{ message: string }>, AdminLoginInput>({
+  return useMutation<string, AxiosError<{ message: string }>, AdminLoginInput>({
     mutationFn: login,
     retry: (failureCount, error) => {
-      if (error.response?.status === 404) return false;
-      return failureCount < 2;
+      const status = error.response?.status;
+      if (status === 404 || status === 401) return false;
+      return failureCount < 1;
     },
   });
 }

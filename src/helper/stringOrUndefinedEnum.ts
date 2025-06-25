@@ -7,10 +7,15 @@ import { ProductVariantType } from "@/lib/types/productType";
  */
 export function mapVariantToPayload(v: VariantFormValues): ProductVariantType {
   return {
-    id: v.id ?? undefined, // optional
+    id: v.id ?? undefined,
     color: v.color,
     thumbnail: v.thumbnail || "/placeholder.svg",
     gallery: v.gallery?.length ? v.gallery : [],
-    sizes: v.sizes,
+    sizes: v.sizes.map((sizeObj) => ({
+      size: sizeObj.size,
+      marketPrice: sizeObj.marketPrice,
+      sellingPrice: sizeObj.sellingPrice,
+      stock: sizeObj.stock,
+    })),
   };
 }

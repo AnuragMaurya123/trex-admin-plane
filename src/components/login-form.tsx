@@ -15,32 +15,32 @@ import { useLogin } from "@/hooks/useLogin";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { mutate, isPending, error,data } = useLogin();
+  const { mutate, isPending, error } = useLogin();
+
 
   const form = useForm<AdminLoginInput>({
     resolver: zodResolver(adminLoginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 function getErrorMessage(error: AxiosError): string {
+  console.log(error.response)
   return (error.response?.data as { message?: string })?.message || error.message;
 }
 
-  function onSubmit(values: AdminLoginInput) {
-    mutate(values, {
-      onSuccess: () => {
-        toast.success(data || "Successfully logged in");
-        router.push("/dashboard");
-      },
-      onError: (error: AxiosError) => {
-        toast.error(
-          getErrorMessage(error) || error.message || "Login failed"
-        );
-      },
-    });
-  }
+ function onSubmit(values: AdminLoginInput) {
+  mutate(values, {
+    onSuccess: (message:string) => {
+      toast.success(message || "Successfully logged in");
+      router.push("/dashboard");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
+}
 
   if (isPending) {
     return (
@@ -63,8 +63,8 @@ function getErrorMessage(error: AxiosError): string {
 
           <FormInput
             control={form.control}
-            label="Username"
-            name="username"
+            label="Email"
+            name="email"
             placeHolder="Enter your Username"
             type="text"
           />

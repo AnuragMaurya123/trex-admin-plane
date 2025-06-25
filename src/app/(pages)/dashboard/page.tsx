@@ -58,7 +58,6 @@ export default function Dashboard() {
   if (statsError || !statsCardData || pieStatsError || !pieStatsData || yearlyEarningsError || !yearlyEarnings) {
     return <PageError />;
   }
-  console.log(yearlyEarnings);
 
   return (
     <div className="min-h-screen ` bg-gradient-to-br from-slate-50 to-purple-100/40 p-4 sm:p-6 dark:from-slate-900 dark:to-purple-900/40">
