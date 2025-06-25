@@ -1,6 +1,7 @@
-import { ProductFormValues } from "@/validationSchema/productSchema";
 
-export const dummyProducts: ProductFormValues[] = [
+import { Product } from "../types/productType";
+
+export const dummyProducts: Product[] = [
   /* ─────────────────────────────────────────────── 1 */
   {
     name: "Classic White T‑Shirt",

@@ -32,7 +32,6 @@ export const productSchema = z.object({
   occasion: z.string().min(1, { message: "Occasion is required" }),
   patternAndPrint: z.string().min(1, { message: "Pattern is required" }),
   style: z.string().min(1, { message: "Style is required" }),
-
   dateAdded: z.string().datetime().optional(),
 
   variants: z.array(variantSchema).min(1, { message: "Add at least one variant" }),
