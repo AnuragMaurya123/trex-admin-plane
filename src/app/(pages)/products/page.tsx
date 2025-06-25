@@ -177,7 +177,7 @@ export default function ProductManagementPage() {
               />
               <Select
                 value={category}
-                onValueChange={(v) => setCategory("all")}
+                onValueChange={() => setCategory("all")}
               >
                 <SelectTrigger className="min-w-[9rem] bg-gradient-to-r from-purple-500 to-purple-600 border-white text-white">
                   <SelectValue placeholder="Category" />
@@ -186,7 +186,7 @@ export default function ProductManagementPage() {
                   <SelectItem value="all" className="text-white">
                     All
                   </SelectItem>
-                  {variable?.catergory && variable?.catergory.map((c) => (
+                  {variable?.catergory && variable.catergory.map((c) => (
                     <SelectItem key={c} value={c} className="text-white">
                       {c}
                     </SelectItem>
