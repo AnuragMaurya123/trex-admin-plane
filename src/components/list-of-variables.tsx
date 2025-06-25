@@ -1,29 +1,22 @@
 "use client";
 
 import { useGetVariable } from "@/hooks/useGetVariable";
-import { useState } from "react";
 import PageLoading from "./page-loading";
 import PageError from "./page-error";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Edit,
-  Trash2,
   Package,
   Palette,
   Calendar,
   Shirt,
   Ruler,
   Tag,
-  AlertTriangle,
-  RefreshCw,
   X,
 } from "lucide-react";
 import {
@@ -133,7 +126,7 @@ export default function ListOfVariables() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete "{item}" from {label}?
+                                Are you sure you want to delete {item} from {label}?
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

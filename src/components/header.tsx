@@ -5,7 +5,6 @@ import ModeToggle from "./mode-toggle";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
-import PageLoading from "./page-loading";
 import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
 
 export default function Header() {

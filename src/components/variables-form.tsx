@@ -20,15 +20,14 @@ import {
 } from "@/validationSchema/variablesSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fieldConfig } from "@/lib/constants/variablesTabs";
-import axios, { isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useAddVariables } from "@/hooks/useAddVariable";
 
 export default function VariablesForm() {
   const {
   mutateAsync: addVariables,
-  isPending,
-  error
+  isPending
 } = useAddVariables();
 
   const form = useForm<variablesFormValues>({
@@ -45,9 +44,12 @@ export default function VariablesForm() {
     },
   });
 
-  const [input, setInput] = useState<Record<keyof variablesFormValues, string>>(
-    Object.fromEntries(fieldConfig.map(({ key }) => [key, ""])) as any
-  );
+ const [input, setInput] = useState<Record<keyof variablesFormValues, string>>(() => {
+  return fieldConfig.reduce((acc, { key }) => {
+    acc[key as keyof variablesFormValues] = "";
+    return acc;
+  }, {} as Record<keyof variablesFormValues, string>);
+});
 
 const onSubmit = async (values: variablesFormValues) => {
   try {
