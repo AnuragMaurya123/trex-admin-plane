@@ -18,12 +18,11 @@ export default function AuthCheckWrapper({ children }: AuthCheckWrapperProps) {
   const { data:user, isLoading, isError } = useCurrentAdmin();
 
 
- useEffect(() => {
-    if (!isLoading && !user && !isError) {
-      router.push("/");
-    }
-  }, [isLoading, user, isError]);
-
+useEffect(() => {
+  if (!isLoading && !user && !isError) {
+    router.push("/");
+  }
+}, [isLoading, user, isError, router]);
   
   if (isLoading) {
     return <PageLoading />;

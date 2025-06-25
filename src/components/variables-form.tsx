@@ -57,15 +57,12 @@ const onSubmit = async (values: variablesFormValues) => {
     form.reset()
     toast.success("Product variables have been saved successfully.");
   } catch (error) {
-    console.error(error);
-
-    const errorMessage = isAxiosError(error)
-      ? error.response?.data?.message || "Something went wrong while saving variables."
-      : error instanceof Error
-      ? error.message
-      : "Failed to save product variables. Please try again.";
-
-    toast.error(errorMessage);
+    if (isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message || "An error occurred while saving variables.";
+      toast.error(errorMessage);
+      return;
+    }
+    toast.error("An unexpected error occurred while saving variables.");
   }
 };
 
