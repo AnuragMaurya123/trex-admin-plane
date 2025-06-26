@@ -154,7 +154,7 @@ const onSubmit = async (values: variablesFormValues) => {
                                 }))
                               }
                               onKeyPress={(e) => handleKeyPress(e, key)}
-                              placeholder={"Enter ${label.toLowerCase()}..."}
+                              placeholder={`Enter ${label.toLowerCase()}...`}
                               className="h-12 text-base border-slate-300 dark:border-slate-600 focus:border-purple-500 dark:focus:border-purple-400"
                             />
                           </div>
