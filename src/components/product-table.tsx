@@ -20,6 +20,7 @@ import { useHasMounted } from "@/lib/useHasMounted";
 import PageLoading from "./page-loading";
 import { useDeleteProduct } from "@/hooks/useDeleteProduct";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export function ProductTable({
   products,
@@ -38,7 +39,7 @@ export function ProductTable({
     setIsVariantsDialogOpen(true);
   };
 
-  const { mutate: deleteProduct, isPending: deleting } = useDeleteProduct();
+  const { mutate: deleteProduct } = useDeleteProduct();
 
   const handleDeleteProduct = (productId: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
@@ -47,9 +48,10 @@ export function ProductTable({
           toast.success("Product deleted successfully!", { position: "top-right" });
           console.log(data.message);
         },
-        onError: (error: any) => {
+        onError: (error) => {
+          const errorMessage = error instanceof AxiosError ? error.response?.data?.message : "Failed to delete product";
           toast.error(
-            error?.response?.data?.message || "Failed to delete product",
+            errorMessage,
             { position: "top-right" }
           );
         },

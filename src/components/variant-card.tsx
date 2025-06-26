@@ -24,7 +24,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import FormInput from "./form-components/form-input";
 import SizeSection from "./form-components/size-section";
 import ThumbnailUpload from "./form-components/thumbnail-upload";
 import { GalleryUpload } from "./form-components/gallery-upload";
@@ -41,7 +40,6 @@ export default function  VariantCard({
   control,
   remove,
   colorOptions,
-  update,
 }: {
   index: number;
   variant: VariantFormValues;
