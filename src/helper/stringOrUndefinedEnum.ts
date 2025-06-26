@@ -7,7 +7,7 @@ import { ProductVariantType } from "@/lib/types/productType";
  */
 export function mapVariantToPayload(v: VariantFormValues): ProductVariantType {
   return {
-    id: v.id ?? undefined,
+    _id: v._id ?? undefined,
     color: v.color,
     thumbnail: v.thumbnail || "",
     gallery: v.gallery?.length ? v.gallery : [],
