@@ -1,38 +1,46 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Product } from '@/lib/types/productType';
-import axios from 'axios';
+// src/hooks/useCreateProduct.ts
 
-interface NewProduct extends Omit<Product, 'id'> {
+import { useMutation, useQueryClient, type UseMutationOptions } from "@tanstack/react-query";
+import { Product } from "@/lib/types/productType";
+import axios from "axios";
+
+interface NewProduct extends Omit<Product, "id"> {
   dateAdded: string;
 }
 
-// API service function
 async function createProduct(product: NewProduct): Promise<Product> {
-  const response = await axios.post('/api/products', product);
-  if (!response) {
-    throw new Error(`Failed to create product`);
-  }
-  return response.data.product;
+  const accessToken = localStorage.getItem("accessToken");
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL!}/product/create`, product, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
+  return response.data.data as Product;
 }
 
-export function useCreateProduct() {
+// 👇 Accept mutation options here
+export function useCreateProduct(
+  options?: UseMutationOptions<Product, Error, NewProduct>
+) {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<Product, Error, NewProduct>({
     mutationFn: createProduct,
-    onSuccess: (newProduct) => {
-      // Invalidate and refetch products list
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      
-      // Optionally add the new product to the cache immediately
-      queryClient.setQueryData(['products'], (old: Product[]) => {
+    onSuccess: (newProduct, ...args) => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+
+      queryClient.setQueryData(["products"], (old: Product[] | undefined) => {
         return old ? [...old, newProduct] : [newProduct];
       });
-      
-      console.log('Product created successfully:', newProduct);
+
+      // 👇 Call user's onSuccess if provided
+      options?.onSuccess?.(newProduct, ...args);
     },
-    onError: (error) => {
-      console.error('Failed to create product:', error);
+    onError: (error, ...args) => {
+      console.error("Create product failed", error);
+      // 👇 Call user's onError if provided
+      options?.onError?.(error, ...args);
     },
   });
 }

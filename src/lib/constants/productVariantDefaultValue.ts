@@ -5,6 +5,6 @@ import { VariantFormValues } from "@/validationSchema/productSchema";
 export const EMPTY_VARIANT = {
   color: "",
   sizes: [],
-  thumbnail: "/placeholder.svg", // ← required default string
+  thumbnail: "", 
   gallery: [],
 } satisfies VariantFormValues; // Or inline type if needed

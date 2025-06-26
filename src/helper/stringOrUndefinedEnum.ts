@@ -9,7 +9,7 @@ export function mapVariantToPayload(v: VariantFormValues): ProductVariantType {
   return {
     id: v.id ?? undefined,
     color: v.color,
-    thumbnail: v.thumbnail || "/placeholder.svg",
+    thumbnail: v.thumbnail || "",
     gallery: v.gallery?.length ? v.gallery : [],
     sizes: v.sizes.map((sizeObj) => ({
       size: sizeObj.size,

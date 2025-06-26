@@ -1,4 +1,3 @@
-
 export type VariantOptions = Partial<{
   neck:      string;
   sleeve:    string;
@@ -7,7 +6,7 @@ export type VariantOptions = Partial<{
 }>;
 
 export interface ProductVariantType {
-  id?:       string;
+  _id?:       string;
   color:     string;
   thumbnail?: string;
   gallery?:   string[];
@@ -21,7 +20,7 @@ export interface ProductVariantType {
 
 /* ---- product ---- */
 export interface Product {
-  id?:               string;
+  _id?:               string;
   name:              string;
   description:       string;
   category:          string;

@@ -7,6 +7,7 @@ import { useForm, useFieldArray, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircle } from "lucide-react";
 
+
 import {
   Dialog,
   DialogContent,
@@ -32,6 +33,9 @@ import ProductBasics from "./form-components/product-basics";
 import VariantCard from "./variant-card";
 import type { NewProduct } from "@/lib/types/reactComponentsProps";
 import { useGetVariable } from "@/hooks/useGetVariable";
+import { AxiosError } from "axios";
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function ProductDialog({
   initialProduct,
@@ -41,6 +45,7 @@ export default function ProductDialog({
   trigger: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
   const isEdit = Boolean(initialProduct);
 
   const form = useForm<ProductFormValues>({
@@ -50,7 +55,7 @@ export default function ProductDialog({
         ? {
             ...initialProduct,
             variants: initialProduct.variants?.map((v) => ({
-              id: v.id,
+              id: v._id,
               color: v.color,
               thumbnail: v.thumbnail ?? "",
               gallery: v.gallery ?? [],
@@ -70,7 +75,8 @@ export default function ProductDialog({
           },
   });
 
-  const { control, handleSubmit, reset, watch } = form;
+  const { control, handleSubmit, reset, watch, formState } = form;
+  const { errors } = formState;
 
   const {
     fields: variantFields,
@@ -83,9 +89,26 @@ export default function ProductDialog({
   });
 
   const watchedVariants = watch("variants");
-  const { mutate: createProduct, isPending: creating } = useCreateProduct();
-  const { mutate: updateProduct, isPending: updating } = useUpdateProduct();
-  const { data: variable, isLoading: isLoadingVariable, isError } = useGetVariable();
+  const {
+    mutate: createProduct,
+    isPending: creating,
+  } = useCreateProduct();
+
+  const {
+    mutate: updateProduct,
+    isPending: updating,
+  } = useUpdateProduct();
+
+  const {
+    data: variable,
+    isLoading: isLoadingVariable,
+    isError,
+    error,
+  } = useGetVariable();
+  const errorMessage =
+    error instanceof AxiosError
+      ? error.response?.data.message
+      : "An error occurred";
 
   const categoryOptions = variable?.catergory ?? [];
   const subCategoryOptions = variable?.subCatergory ?? [];
@@ -93,44 +116,65 @@ export default function ProductDialog({
   const occasionOptions = variable?.occassion ?? [];
   const patternOptions = variable?.patternAndPrint ?? [];
   const styleOptions = variable?.style ?? [];
+  const colorOptions = variable?.color ?? [];
 
-  if (isLoadingVariable) return <div className="p-6">Loading product configuration...</div>;
-  if (isError || !variable) return <div className="p-6 text-red-500">Failed to load product variables.</div>;
+  if (isLoadingVariable)
+    return <div className="p-6">Loading product configuration...</div>;
+  if (isError || !variable)
+    return (
+      <Link href={"/settings"} className="p-6 text-red-500">
+        <Button className="">{errorMessage}</Button>
+      </Link>
+    );
 
-  const onSubmit: SubmitHandler<ProductFormValues> = (data) => {
-    const variants = data.variants.map(mapVariantToPayload);
+ const onSubmit: SubmitHandler<ProductFormValues> = (data) => {
+  const variants = data.variants.map(mapVariantToPayload);
 
-    if (isEdit && initialProduct) {
-      updateProduct(
-        {
-          ...initialProduct,
-          ...data,
-          variants,
-          subcategory: data.subcategory,
-        },
-        {
-          onSuccess: () => {
-            setOpen(false);
-            reset();
-          },
-        }
-      );
-    } else {
-      const payload: NewProduct = {
+  if (isEdit && initialProduct) {
+    updateProduct(
+      {
+        ...initialProduct,
         ...data,
-        dateAdded: new Date().toISOString(),
-        subcategory: data.subcategory,
         variants,
-        description: data.description ?? "",
-      };
-      createProduct(payload, {
+        subcategory: data.subcategory,
+      },
+      {
         onSuccess: () => {
           setOpen(false);
           reset();
+          setServerError(null);
+          toast.success("Product updated successfully!", { position: "top-right" });
         },
-      });
-    }
-  };
+        onError: (error: any) => {
+          setServerError(
+            error?.response?.data?.message || "Failed to update product"
+          );
+        },
+      }
+    );
+  } else {
+    const payload: NewProduct = {
+      ...data,
+      dateAdded: new Date().toISOString(),
+      subcategory: data.subcategory,
+      variants,
+      description: data.description ?? "",
+    };
+    createProduct(payload, {
+      onSuccess: () => {
+        setOpen(false);
+        reset();
+        setServerError(null);
+        toast.success("Product created successfully!", { position: "top-right" });
+      },
+      onError: (error: any) => {
+        setServerError(
+          error?.response?.data?.message || "Failed to create product"
+        );
+      },
+    });
+  }
+};
 
   const onError = (errors: any) => {
     console.log(" validation errors", errors);
@@ -142,7 +186,9 @@ export default function ProductDialog({
 
       <DialogContent className="sm:max-w-4xl max-h-[95vh] overflow-y-auto scrollbar-hide border-0 shadow-xl shadow-purple-300">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit Product" : "Create New Product"}</DialogTitle>
+          <DialogTitle>
+            {isEdit ? "Edit Product" : "Create New Product"}
+          </DialogTitle>
           <DialogDescription>
             {isEdit
               ? "Update the product details and manage its variants."
@@ -151,7 +197,22 @@ export default function ProductDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-8 py-4">
+          <form
+            onSubmit={handleSubmit(onSubmit, onError)}
+            className="space-y-8 py-4"
+          >
+            {Object.keys(errors).length > 0 && (
+              <div className="text-red-500 bg-red-100 px-4 py-2 rounded">
+                Please fix the highlighted errors below.
+              </div>
+            )}
+
+            {serverError && (
+              <div className="text-red-600 bg-red-100 px-4 py-2 rounded">
+                {serverError}
+              </div>
+            )}
+
             <ProductBasics
               control={control}
               categoryOptions={categoryOptions}
@@ -177,6 +238,7 @@ export default function ProductDialog({
                     control={control}
                     remove={removeVariant}
                     update={updateVariant}
+                    colorOptions={colorOptions}
                   />
                 ))}
               </Accordion>
@@ -198,6 +260,7 @@ export default function ProductDialog({
                 onClick={() => {
                   setOpen(false);
                   reset();
+                  setServerError(null);
                 }}
               >
                 Cancel

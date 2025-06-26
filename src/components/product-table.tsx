@@ -1,28 +1,15 @@
+// 👇 Your imports remain the same
 import Image from "next/image";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  MoreHorizontal,
-  Trash2,
-  Edit3,
-  PackageSearch,
-  Eye,
-  PlusCircle,
+  MoreHorizontal, Trash2, Edit3, PackageSearch, Eye, PlusCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ProductDialog from "./add-product-dialog";
@@ -31,6 +18,8 @@ import { Product } from "@/lib/types/productType";
 import { VariantsDialog } from "./variants-dialog";
 import { useHasMounted } from "@/lib/useHasMounted";
 import PageLoading from "./page-loading";
+import { useDeleteProduct } from "@/hooks/useDeleteProduct";
+import { toast } from "react-toastify";
 
 export function ProductTable({
   products,
@@ -49,8 +38,23 @@ export function ProductTable({
     setIsVariantsDialogOpen(true);
   };
 
+  const { mutate: deleteProduct, isPending: deleting } = useDeleteProduct();
+
   const handleDeleteProduct = (productId: string) => {
-    console.log("Delete product:", productId);
+    if (confirm("Are you sure you want to delete this product?")) {
+      deleteProduct(productId, {
+        onSuccess: (data) => {
+          toast.success("Product deleted successfully!", { position: "top-right" });
+          console.log(data.message);
+        },
+        onError: (error: any) => {
+          toast.error(
+            error?.response?.data?.message || "Failed to delete product",
+            { position: "top-right" }
+          );
+        },
+      });
+    }
   };
 
   if (isDebouncing) {
@@ -207,7 +211,7 @@ export function ProductTable({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="bg-white dark:bg-slate-800 shadow-xl rounded-lg border border-slate-200 dark:border-slate-700 "
+                        className="bg-white dark:bg-slate-800 shadow-xl rounded-lg border border-slate-200 dark:border-slate-700"
                       >
                         <DropdownMenuLabel className="text-sm font-medium text-slate-800 dark:text-slate-200 px-2 py-1.5">
                           Product Actions
@@ -215,7 +219,7 @@ export function ProductTable({
                         <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
                         <ProductDialog
                           trigger={
-                            <Button className="w-full sm:w-auto ">
+                            <Button className="w-full sm:w-auto">
                               <Edit3 className="mr-2 h-4 w-4" />
                               <span className="hidden sm:inline text-black">Edit Product</span>
                             </Button>
@@ -223,7 +227,7 @@ export function ProductTable({
                           initialProduct={product}
                         />
                         <DropdownMenuItem
-                          onClick={() => handleDeleteProduct(product.id || "")}
+                          onClick={() => handleDeleteProduct(product._id ||  "")}
                           className="flex items-center text-red-600 hover:!text-red-700 hover:!bg-red-50 dark:text-red-400 dark:hover:!text-red-300 dark:hover:!bg-red-700/30 rounded-md transition-colors cursor-pointer px-2 py-2 text-sm"
                         >
                           <Trash2 className="mr-2 h-4 w-4" /> Delete Product

@@ -19,4 +19,5 @@ export const fieldConfig = [
   },
   { key: "style" as keyof variablesFormValues, label: "Styles", icon: Shirt, description: "Fashion styles and trends" },
   { key: "sizes" as keyof variablesFormValues, label: "Sizes", icon: Ruler, description: "Available size options" },
+  { key: "fabric" as keyof variablesFormValues, label: "Fabric", icon: Ruler, description: "Available fabric options" },
 ]

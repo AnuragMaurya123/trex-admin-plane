@@ -101,7 +101,7 @@ const onSubmit = async (values: variablesFormValues) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Tabs defaultValue="catergory" className="w-full">
             {/* Enhanced Tabs List */}
-            <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 h-auto p-1 bg-slate-100 dark:bg-slate-800 mb-8">
+            <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 h-auto p-1 bg-slate-100 dark:bg-slate-800 mb-8">
               {fieldConfig.map(({ key, label, icon: Icon }) => (
                 <TabsTrigger
                   key={key}

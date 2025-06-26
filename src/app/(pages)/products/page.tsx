@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-import { useGetProduct } from "@/hooks/useGetProduct";
+import { useGetAllProducts } from "@/hooks/useGetProduct";
 import { useHasMounted } from "@/lib/useHasMounted";
 import { CenteredGradientCard } from "@/components/centered-gradient-card";
 import PageLoading from "@/components/page-loading";
@@ -56,7 +56,7 @@ const valueOf = (p: Product) =>
 
 export default function ProductManagementPage() {
   /* fetch --------------------------------------------------- */
-  const { data: productsList, isError, isLoading } = useGetProduct();
+  const { data: productsList, isError, isLoading } = useGetAllProducts();
   
     const { data: variable} = useGetVariable();
 

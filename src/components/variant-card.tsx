@@ -28,6 +28,7 @@ import FormInput from "./form-components/form-input";
 import SizeSection from "./form-components/size-section";
 import ThumbnailUpload from "./form-components/thumbnail-upload";
 import { GalleryUpload } from "./form-components/gallery-upload";
+import FormSelect from "./form-components/form-select";
 
 /**
  * Single Variant Card inside ProductDialog.
@@ -39,12 +40,14 @@ export default function  VariantCard({
   variant,
   control,
   remove,
-  // update,
+  colorOptions,
+  update,
 }: {
   index: number;
   variant: VariantFormValues;
   control: Control<ProductFormValues>;
   remove: (idx: number) => void;
+  colorOptions:string[];
   update: UseFieldArrayUpdate<ProductFormValues, "variants">;
 }) {
   /* ────────────────────────────────────────── */
@@ -106,12 +109,12 @@ export default function  VariantCard({
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormInput
-                    control={control}
-                    name={`variants.${index}.color`}
-                    label="Colour*"
-                    placeHolder="e.g., Navy Blue"
-                  />
+                  <FormSelect
+                           control={control}
+                           name={ `variants.${index}.color`}
+                           label="Color*"
+                           options={colorOptions}
+                         />
                 </div>
               </CardContent>
             </Card>

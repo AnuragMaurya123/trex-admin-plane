@@ -80,7 +80,7 @@ export function VariantsDialog({
                       {variant.gallery.map((url, i) => (
                         <Image
                           key={i}
-                          src={url || "/placeholder.svg"}
+                          src={url}
                           alt={`${variant.color} ${i + 1}`}
                           width={64}
                           height={64}

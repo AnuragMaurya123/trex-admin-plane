@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
  images: {
     domains: [
       "via.placeholder.com",
-      
+      "bucket-trex-images.s3.us-east-1.amazonaws.com"
       
     ],
   },

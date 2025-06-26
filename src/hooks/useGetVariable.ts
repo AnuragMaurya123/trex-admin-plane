@@ -15,7 +15,7 @@ export function useGetVariable() {
         withCredentials: true,
       });
 
-      return res.data.data;
+      return res.data.data as Variables;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

@@ -31,7 +31,7 @@ export function TopProductTable({ products }: ProductCarouselProps) {
                   <div className="flex items-center gap-4">
                     <div className="relative w-12 h-12">
                       <Image
-                        src={product.image || "/placeholder.svg?width=64&height=64"}
+                        src={product.image}
                         alt={product.name}
                         fill
                         className="object-cover rounded-lg border border-slate-300 dark:border-slate-600"

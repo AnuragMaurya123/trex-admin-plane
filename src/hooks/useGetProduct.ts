@@ -1,25 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
-// import axios from "axios";
-import { Product } from "@/lib/types/productType";
-import { dummyProducts } from "@/lib/constants/productData";
+import { useQuery } from '@tanstack/react-query';
+import { Product } from '@/lib/types/productType';
+import axios from 'axios';
 
+// API service function
+async function fetchAllProducts(): Promise<Product[]> {
+  const accessToken = localStorage.getItem("accessToken");
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL!}/product/all`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  });
 
-// API call
-const fetchProducts = async (): Promise<Product[]> => {
-  //   const response = await axios.post('/api/get-products'); // If your API expects POST
-  //   if (!response.data?.product) {
-  //     throw new Error('No products found');
-  //   }
-  //   return response.data.product;
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return dummyProducts as Product[];
-};
+  if (!response || !response.data || !response.data.data) {
+    throw new Error("Failed to fetch products");
+  }
 
-// Hook
-export function useGetProduct() {
-  return useQuery<Product[], Error>({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-    staleTime: 1000 * 60 * 5, // optional: cache for 5 min
+  return response.data.data;
+}
+
+// React Query hook
+export function useGetAllProducts() {
+  return useQuery({
+    queryKey: ['products'],
+    queryFn: fetchAllProducts,
+    staleTime: 5 * 60 * 1000, // cache for 5 minutes
   });
 }

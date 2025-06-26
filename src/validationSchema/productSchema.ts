@@ -11,7 +11,7 @@ export const variantSizeSchema = z.object({
 
 /* ───── variant ───── */
 export const variantSchema = z.object({
-  id: z.string().optional(),
+  _id: z.string().optional(),
   color: z.string().min(1, { message: "Colour is required" }),
   sizes: z.array(variantSizeSchema).min(1, { message: "Add at least one size row" }),
   thumbnail: z.string().url({ message: "Thumbnail URL is required" }),
@@ -23,7 +23,7 @@ export const variantSchema = z.object({
 
 /* ───── product ───── */
 export const productSchema = z.object({
-  id: z.string().optional(),
+  _id: z.string().optional(),
   name: z.string().min(1, { message: "Product name is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   category: z.string().min(1, { message: "Category is required" }),
