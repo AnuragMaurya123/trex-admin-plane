@@ -28,6 +28,7 @@ import { Separator } from "@/components/ui/separator"
 import { useHasMounted } from "@/lib/useHasMounted"
 import { Order } from "@/lib/types/orderType"
 import KPICard from "@/components/kpl-card"
+import Image from "next/image"
 
 // Mock data for demonstration
 const mockOrders: Order[] = [
@@ -519,9 +520,10 @@ export default function OrdersPage() {
                                     >
                                       <CardContent className="p-4">
                                         <div className="flex gap-4">
-                                          <img
+                                          <Image
                                             src={item.variant.thumbnail || "/placeholder.svg?height=80&width=80"}
                                             alt={item.product.name}
+                                            fill
                                             className="w-20 h-20 object-cover rounded-lg border-2 border-purple-200"
                                           />
                                           <div className="flex-1">
