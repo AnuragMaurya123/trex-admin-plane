@@ -1,12 +1,17 @@
+import { Product, ProductVariantType } from "./productType"
 
-
-import { Product, ProductVariantType } from "./productType";
-export interface OrderItem {
-  product: Product
-  variant: ProductVariantType
-  size: string
-  quantity: number
-  price: number
+export interface Distributor {
+  _id: string
+  name: string
+  email: string
+  phone: string
+  address: string
+  city: string
+  state: string
+  capacity: number
+  currentOrders: number
+  rating: number
+  status: "active" | "inactive"
 }
 
 export interface ShippingAddress {
@@ -18,6 +23,16 @@ export interface ShippingAddress {
   postalCode: string
   country: string
   phone: string
+}
+
+
+
+export interface OrderItem {
+  product: Product
+  variant: ProductVariantType
+  size: string
+  quantity: number
+  price: number
 }
 
 export interface Order {
@@ -39,4 +54,7 @@ export interface Order {
   estimatedDelivery?: string
   trackingNumber?: string
   notes?: string
+  assignedDistributor?: Distributor
+  assignedDate?: string
+  distributorNotes?: string
 }

@@ -2,6 +2,7 @@ import { Control, FieldArrayWithId, UseFieldArrayAppend, } from "react-hook-form
 import { TopSellProduct } from "./dashboardSliderType";
 import { Product } from "./productType";
 import { ProductFormValues } from "@/validationSchema/productSchema";
+import { Order } from "./orderType";
 
 export interface SidebarProps {
   defaultCollapsed?: boolean;
@@ -51,4 +52,15 @@ export interface KPICardProps {
   subtitle: string;
   icon: React.ReactNode;
   color: string;
+}
+
+export interface OrdersListTabProps {
+  orders: Order[]
+  getStatusColor: (status: Order["status"]) => string;
+}
+
+export interface DistributorAssignmentProps {
+  orders: Order[]
+  getStatusColor: (status: Order["status"]) => string
+  setOrders: React.Dispatch<React.SetStateAction<Order[]>>
 }
