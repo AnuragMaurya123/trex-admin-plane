@@ -29,7 +29,7 @@ import { Order } from "@/lib/types/orderType"
 import { useState } from "react"
 
 
-const getStatusIcon = (status: Order["status"]) => {
+const getStatusIcon = (status: Order["orderStatusUpdate"]) => {
   const icons = {
     pending: Clock,
     confirmed: CheckCircle,
@@ -38,7 +38,7 @@ const getStatusIcon = (status: Order["status"]) => {
     delivered: CheckCircle,
     cancelled: XCircle,
   }
-  const Icon = icons[status] || Clock
+  const Icon = icons[status.status] || Clock
   return <Icon className="h-4 w-4" />
 }
 
@@ -46,14 +46,17 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
       const [searchTerm, setSearchTerm] = useState("")
       const [statusFilter, setStatusFilter] = useState<string>("all")
       const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
-       const filteredOrders = orders.filter((order) => {
-    const matchesSearch =
-      order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === "all" || order.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+      const filteredOrders = orders.filter((order) => {
+  const name = order.customerName || ""
+  const email = order.customerEmail || ""
+  const matchesSearch =
+    name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    email.toLowerCase().includes(searchTerm.toLowerCase())
+
+  const matchesStatus = statusFilter === "all" || order.orderStatusUpdate?.status === statusFilter
+
+  return matchesSearch && matchesStatus
+})
 
   return (
     <div>
@@ -110,7 +113,6 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                   {filteredOrders.map((order) => (
                     <TableRow key={order._id} className="border-purple-100/50 hover:bg-purple-50/30">
                       <TableCell>
-                        <div className="font-medium text-purple-900">{order.orderNumber}</div>
                         <div className="text-sm text-purple-600">{order.items.length} item{order.items.length !== 1 ? "s" : ""}</div>
                       </TableCell>
                       <TableCell>
@@ -119,10 +121,10 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                       </TableCell>
                       <TableCell className="text-purple-800">{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                       <TableCell>
-                        <Badge className={`${getStatusColor(order.status)} border-0`}>
+                        <Badge className={`${getStatusColor(order.orderStatusUpdate)} border-0`}>
                           <div className="flex items-center gap-1">
-                            {getStatusIcon(order.status)}
-                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                            {getStatusIcon(order.orderStatusUpdate)}
+                            {order.orderStatusUpdate.status.charAt(0).toUpperCase() + order.orderStatusUpdate.status.slice(1)}
                           </div>
                         </Badge>
                       </TableCell>
@@ -152,7 +154,7 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                           <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-white">
                             <DialogHeader>
                               <DialogTitle className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                                Order Details - {order.orderNumber}
+                                Order Details 
                               </DialogTitle>
                             </DialogHeader>
                              {selectedOrder && (
@@ -189,21 +191,21 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                                         </CardTitle>
                                       </CardHeader>
                                       <CardContent className="space-y-2">
-                                        <Badge className={getStatusColor(selectedOrder.status)}>
+                                        <Badge className={getStatusColor(selectedOrder.orderStatusUpdate)}>
                                           <div className="flex items-center gap-1">
-                                            {getStatusIcon(selectedOrder.status)}
-                                            {selectedOrder.status.charAt(0).toUpperCase() +
-                                              selectedOrder.status.slice(1)}
+                                            {getStatusIcon(selectedOrder.orderStatusUpdate)}
+                                            {selectedOrder.orderStatusUpdate.status.charAt(0).toUpperCase() +
+                                              selectedOrder.orderStatusUpdate.status.slice(1)}
                                           </div>
                                         </Badge>
                                         <p className="text-sm">
                                           <strong className="text-blue-700">Payment:</strong>{" "}
-                                          {selectedOrder.paymentStatus}
+                                          {selectedOrder.orderStatusUpdate.paymentStatus}
                                         </p>
-                                        {selectedOrder.trackingNumber && (
+                                        {selectedOrder.orderStatusUpdate.trackingNumber && (
                                           <p className="text-sm">
                                             <strong className="text-blue-700">Tracking:</strong>{" "}
-                                            {selectedOrder.trackingNumber}
+                                            {selectedOrder.orderStatusUpdate.trackingNumber}
                                           </p>
                                         )}
                                       </CardContent>
@@ -245,12 +247,7 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                                               {new Date(selectedOrder.assignedDate).toLocaleString()}
                                             </p>
                                           )}
-                                          {selectedOrder.distributorNotes && (
-                                            <p>
-                                              <strong className="text-orange-700">Notes:</strong>{" "}
-                                              {selectedOrder.distributorNotes}
-                                            </p>
-                                          )}
+                                         
                                         </CardContent>
                                       </Card>
                                     </>

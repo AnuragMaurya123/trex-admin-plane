@@ -8,4 +8,5 @@ export type Variables = {
   style?: string[];
   sizes?: string[];
   fabric?: string[];
+  option?: string[];
 };

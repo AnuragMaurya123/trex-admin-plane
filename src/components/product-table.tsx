@@ -193,7 +193,7 @@ export function ProductTable({
                   </TableCell>
                   <TableCell className="py-3 px-3 text-sm text-slate-600 dark:text-slate-300">
                     {hasMounted
-                      ? new Date(product.dateAdded).toLocaleDateString("en-GB", {
+                      ? new Date(product.createdAt || "").toLocaleDateString("en-GB", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",

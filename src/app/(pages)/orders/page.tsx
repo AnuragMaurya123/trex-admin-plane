@@ -19,8 +19,8 @@ import DistributorAssignment from "@/components/distributor-assignment"
 
 
 
-const getStatusColor = (status: Order["status"]) => {
-  switch (status) {
+const getStatusColor = (orderStatusUpdate: Order["orderStatusUpdate"]) => {
+  switch (orderStatusUpdate.status) {
     case "pending":
       return "bg-gradient-to-r from-yellow-400 to-yellow-500 text-white"
     case "confirmed":
@@ -43,8 +43,8 @@ export default function OrdersPage() {
   const hasMounted = useHasMounted()
   const totalOrders = orders.length
   const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0)
-  const pendingOrders = orders.filter((order) => order.status === "pending").length
-  const deliveredOrders = orders.filter((order) => order.status === "delivered").length
+  const pendingOrders = orders.filter((order) => order.orderStatusUpdate.status === "pending").length
+  const deliveredOrders = orders.filter((order) => order.orderStatusUpdate.status === "delivered").length
 
  
 

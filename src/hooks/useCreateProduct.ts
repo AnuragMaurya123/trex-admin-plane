@@ -4,16 +4,10 @@ import { useMutation, useQueryClient, type UseMutationOptions } from "@tanstack/
 import { Product } from "@/lib/types/productType";
 import axios from "axios";
 
-interface NewProduct extends Omit<Product, "id"> {
-  dateAdded: string;
-}
 
-async function createProduct(product: NewProduct): Promise<Product> {
-  const accessToken = localStorage.getItem("accessToken");
+async function createProduct(product: Product): Promise<Product> {
+
   const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL!}/product/create`, product, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
     withCredentials: true,
   });
   return response.data.data as Product;
@@ -21,21 +15,21 @@ async function createProduct(product: NewProduct): Promise<Product> {
 
 // 👇 Accept mutation options here
 export function useCreateProduct(
-  options?: UseMutationOptions<Product, Error, NewProduct>
+  options?: UseMutationOptions<Product, Error, Product>
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation<Product, Error, NewProduct>({
+  return useMutation<Product, Error, Product>({
     mutationFn: createProduct,
-    onSuccess: (newProduct, ...args) => {
+    onSuccess: (Product, ...args) => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
 
       queryClient.setQueryData(["products"], (old: Product[] | undefined) => {
-        return old ? [...old, newProduct] : [newProduct];
+        return old ? [...old, Product] : [Product];
       });
 
       // 👇 Call user's onSuccess if provided
-      options?.onSuccess?.(newProduct, ...args);
+      options?.onSuccess?.(Product, ...args);
     },
     onError: (error, ...args) => {
       console.error("Create product failed", error);

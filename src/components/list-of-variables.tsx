@@ -18,6 +18,7 @@ import {
   Ruler,
   Tag,
   X,
+  Wrench,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -42,11 +43,14 @@ const categoryConfig = [
   { key: "patternAndPrint", label: "Patterns & Prints", icon: Shirt, color: "bg-orange-500" },
   { key: "style", label: "Styles", icon: Shirt, color: "bg-pink-500" },
   { key: "sizes", label: "Sizes", icon: Ruler, color: "bg-indigo-500" },
+  { key: "option", label: "Option", icon: Wrench, color: "bg-blue-500" },
 ];
 
 export default function ListOfVariables() {
   const { data: variable, isLoading, isError, refetch } = useGetVariable();
   const { mutateAsync: deleteOption, isPending: isDeletingOption } = useDeleteVariableOption();
+  console.log("Variable Data:", variable);
+  
 
   const variableData = variable as Variables;
 
@@ -70,7 +74,7 @@ export default function ListOfVariables() {
   const getTotalItems = () => categoryConfig.reduce((total, { key }) => total + (variableData[key as keyof Variables]?.length || 0), 0);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-violet-50/30 dark:from-slate-950 dark:via-purple-950/30 dark:to-violet-950/30">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="px-4 py-8">
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">

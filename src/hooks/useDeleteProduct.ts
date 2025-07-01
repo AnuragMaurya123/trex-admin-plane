@@ -3,13 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 async function deleteProduct(productId: string): Promise<{ message: string }> {
-  const accessToken = localStorage.getItem("accessToken");
   const response = await axios.delete(
     `${process.env.NEXT_PUBLIC_BACKEND_URL!}/product/${productId}`,
     {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
       withCredentials: true,
     }
   );

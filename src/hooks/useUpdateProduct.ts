@@ -8,14 +8,10 @@ async function updateProduct(product: Product): Promise<Product> {
     throw new Error('Product ID is required for update');
   }
 
-  const accessToken = localStorage.getItem("accessToken");
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_BACKEND_URL!}/product/update`,
     product,
     {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
       withCredentials: true,
     }
   );

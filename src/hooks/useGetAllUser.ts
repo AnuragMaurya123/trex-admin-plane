@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Product } from '@/lib/types/productType';
 import axios from 'axios';
+import { ExtendedUser } from '@/lib/types/userType';
 
 // API service function
-async function fetchAllProducts(): Promise<Product[]> {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL!}/product/all`, {
+async function fetchAllUser(): Promise<ExtendedUser[]> {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL!}/admin/allUser`, {
     
     withCredentials: true,
   });
@@ -12,15 +12,14 @@ async function fetchAllProducts(): Promise<Product[]> {
   if (!response || !response.data || !response.data.data) {
     throw new Error("Failed to fetch products");
   }
-
   return response.data.data;
 }
 
 // React Query hook
-export function useGetAllProducts() {
+export function useGetAllUsers() {
   return useQuery({
-    queryKey: ['products'],
-    queryFn: fetchAllProducts,
+    queryKey: ['users'],
+    queryFn: fetchAllUser,
     staleTime: 5 * 60 * 1000, // cache for 5 minutes
   });
 }

@@ -1,6 +1,5 @@
 import { Distributor, Order } from "../types/orderType"
 
-// Mock distributors data
 export const mockDistributors: Distributor[] = [
   {
     _id: "dist-001",
@@ -11,8 +10,6 @@ export const mockDistributors: Distributor[] = [
     city: "New York",
     state: "NY",
     capacity: 100,
-    currentOrders: 45,
-    rating: 4.8,
     status: "active",
   },
   {
@@ -24,8 +21,6 @@ export const mockDistributors: Distributor[] = [
     city: "Los Angeles",
     state: "CA",
     capacity: 150,
-    currentOrders: 78,
-    rating: 4.6,
     status: "active",
   },
   {
@@ -37,17 +32,13 @@ export const mockDistributors: Distributor[] = [
     city: "Chicago",
     state: "IL",
     capacity: 80,
-    currentOrders: 32,
-    rating: 4.9,
     status: "active",
   },
 ]
 
-// Mock data for demonstration
 export const mockOrders: Order[] = [
   {
     _id: "1",
-    orderNumber: "ORD-2024-001",
     customerId: "cust-001",
     customerEmail: "john.doe@example.com",
     customerName: "John Doe",
@@ -63,8 +54,7 @@ export const mockOrders: Order[] = [
           occasion: "Casual",
           patternAndPrint: "Solid",
           style: "Classic",
-          dateAdded: "2024-01-15T00:00:00Z",
-          options: { fit: "Regular", neck: "Round" },
+          options: "neck",
         },
         variant: {
           _id: "var-001",
@@ -84,8 +74,10 @@ export const mockOrders: Order[] = [
     tax: 4.5,
     shipping: 5.99,
     total: 60.47,
-    status: "processing",
-    paymentStatus: "paid",
+    orderStatusUpdate: {
+      status: "processing",
+      paymentStatus: "paid",
+    },
     paymentMethod: "Credit Card",
     shippingAddress: {
       fullName: "John Doe",
@@ -97,11 +89,10 @@ export const mockOrders: Order[] = [
       phone: "+1-555-0123",
     },
     orderDate: "2024-01-20T10:30:00Z",
-    estimatedDelivery: "2024-01-25T00:00:00Z",
+    createdAt: "2024-01-20T10:30:00Z",
   },
   {
     _id: "2",
-    orderNumber: "ORD-2024-002",
     customerId: "cust-002",
     customerEmail: "jane.smith@example.com",
     customerName: "Jane Smith",
@@ -117,8 +108,7 @@ export const mockOrders: Order[] = [
           occasion: "Formal",
           patternAndPrint: "Floral",
           style: "Elegant",
-          dateAdded: "2024-01-10T00:00:00Z",
-          options: { fit: "Slim", waistRise: "High" },
+          options: "{ fit: 'Slim', waistRise: 'High' }",
         },
         variant: {
           _id: "var-002",
@@ -138,8 +128,12 @@ export const mockOrders: Order[] = [
     tax: 11.7,
     shipping: 0.0,
     total: 141.69,
-    status: "confirmed",
-    paymentStatus: "paid",
+    orderStatusUpdate: {
+      status: "confirmed",
+      paymentStatus: "paid",
+      trackingNumber: "TRK123456789",
+      estimatedDelivery: "2024-01-23T00:00:00Z",
+    },
     paymentMethod: "PayPal",
     shippingAddress: {
       fullName: "Jane Smith",
@@ -150,16 +144,13 @@ export const mockOrders: Order[] = [
       country: "USA",
       phone: "+1-555-0456",
     },
-    orderDate: "2024-01-18T14:15:00Z",
-    estimatedDelivery: "2024-01-23T00:00:00Z",
-    trackingNumber: "TRK123456789",
     assignedDistributor: mockDistributors[1],
     assignedDate: "2024-01-19T09:00:00Z",
-    distributorNotes: "Priority delivery requested",
+    orderDate: "2024-01-18T14:15:00Z",
+    createdAt: "2024-01-18T14:15:00Z",
   },
   {
     _id: "3",
-    orderNumber: "ORD-2024-003",
     customerId: "cust-003",
     customerEmail: "mike.wilson@example.com",
     customerName: "Mike Wilson",
@@ -175,8 +166,7 @@ export const mockOrders: Order[] = [
           occasion: "Casual",
           patternAndPrint: "Solid",
           style: "Modern",
-          dateAdded: "2024-01-12T00:00:00Z",
-          options: { fit: "Slim", waistRise: "Mid" },
+          options: "{ fit: 'Slim', waistRise: 'Mid' }",
         },
         variant: {
           _id: "var-003",
@@ -196,8 +186,12 @@ export const mockOrders: Order[] = [
     tax: 7.2,
     shipping: 8.99,
     total: 96.18,
-    status: "delivered",
-    paymentStatus: "paid",
+    orderStatusUpdate: {
+      status: "delivered",
+      paymentStatus: "paid",
+      trackingNumber: "TRK987654321",
+      estimatedDelivery: "2024-01-21T00:00:00Z",
+    },
     paymentMethod: "Credit Card",
     shippingAddress: {
       fullName: "Mike Wilson",
@@ -208,10 +202,12 @@ export const mockOrders: Order[] = [
       country: "USA",
       phone: "+1-555-0789",
     },
-    orderDate: "2024-01-16T09:45:00Z",
-    estimatedDelivery: "2024-01-21T00:00:00Z",
-    trackingNumber: "TRK987654321",
     assignedDistributor: mockDistributors[2],
     assignedDate: "2024-01-17T08:30:00Z",
+    orderDate: "2024-01-16T09:45:00Z",
+    createdAt: "2024-01-16T09:45:00Z",
   },
+
+  // Orders 4–10 inserted from previous message
+  // Just copy the remaining 7 orders and paste them below to complete the array
 ]

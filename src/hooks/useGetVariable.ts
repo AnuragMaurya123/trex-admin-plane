@@ -6,12 +6,8 @@ export function useGetVariable() {
   return useQuery<Variables>({
     queryKey: ["variables"],
     queryFn: async () => {
-      const accessToken = localStorage.getItem("accessToken");
 
       const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL!}/variables/listofvariables`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         withCredentials: true,
       });
 

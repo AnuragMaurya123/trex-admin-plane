@@ -1,9 +1,4 @@
-export type VariantOptions = Partial<{
-  neck:      string;
-  sleeve:    string;
-  fit:       string;
-  waistRise: string;
-}>;
+
 
 export interface ProductVariantType {
   _id?:       string;
@@ -28,8 +23,8 @@ export interface Product {
   fabric:            string;
   occasion:          string;
   patternAndPrint:   string;
-  style:             string;
-  dateAdded:         string;          // ISO‑8601
-  options?:          VariantOptions;  // global variant dimensions & defaults
+  style:             string; 
+  options?:          string; 
   variants?:         ProductVariantType[];
+   createdAt?: string;
 }

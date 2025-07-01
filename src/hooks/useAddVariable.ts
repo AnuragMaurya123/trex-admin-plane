@@ -3,15 +3,10 @@ import axios from "axios";
 import { Variables } from "@/lib/types/variablesType";
 
 async function updateVariables(variables: Variables): Promise<Variables> {
-  const accessToken = localStorage.getItem("accessToken");
-
   const response = await axios.put(
     `${process.env.NEXT_PUBLIC_BACKEND_URL!}/variables/update`,
     variables,
     {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
       withCredentials: true,
     }
   );

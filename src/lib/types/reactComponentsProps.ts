@@ -34,9 +34,7 @@ export interface SizeSectionProps {
   control: Control<ProductFormValues>;
 }
 
-export interface NewProduct extends Omit<Product, 'id'> {
-  dateAdded: string;
-}
+
 
 export interface SizeSectionProps {
   idx: number;
@@ -56,11 +54,11 @@ export interface KPICardProps {
 
 export interface OrdersListTabProps {
   orders: Order[]
-  getStatusColor: (status: Order["status"]) => string;
+  getStatusColor: (status: Order["orderStatusUpdate"]) => string;
 }
 
 export interface DistributorAssignmentProps {
   orders: Order[]
-  getStatusColor: (status: Order["status"]) => string
+  getStatusColor: (status: Order["orderStatusUpdate"]) => string
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>
 }

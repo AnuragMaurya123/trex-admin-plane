@@ -28,6 +28,7 @@ type ProductBasicsProps = {
   occasionOptions: string[];
   patternOptions: string[];
   styleOptions: string[];
+  option:string[];
 };
 
 export default function ProductBasics({
@@ -38,6 +39,7 @@ export default function ProductBasics({
   occasionOptions,
   patternOptions,
   styleOptions,
+  option
 }: ProductBasicsProps) {
   const category = useWatch({ control, name: "category" });
 
@@ -97,6 +99,12 @@ export default function ProductBasics({
             name="patternAndPrint"
             label="Pattern & Print"
             options={patternOptions}
+          />
+          <FormSelect
+            control={control}
+            name="option"
+            label="Option"
+            options={option}
           />
           <FormSelect
             control={control}

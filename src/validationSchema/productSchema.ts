@@ -1,6 +1,7 @@
 // validationSchema/productSchema.ts
 import { z } from "zod";
 
+
 /* ───── size row ───── */
 export const variantSizeSchema = z.object({
   size: z.string().min(1, { message: "Select one size" }),
@@ -10,16 +11,16 @@ export const variantSizeSchema = z.object({
 });
 
 /* ───── variant ───── */
-export const variantSchema = z.object({
-  _id: z.string().optional(),
-  color: z.string().min(1, { message: "Colour is required" }),
-  sizes: z.array(variantSizeSchema).min(1, { message: "Add at least one size row" }),
-  thumbnail: z.string().url({ message: "Thumbnail URL is required" }),
-  gallery: z
-    .array(z.string().url({ message: "Invalid image URL" }))
-    .max(4, { message: "Up to 4 gallery images" })
-    .optional(),
-});
+  export const variantSchema = z.object({
+    _id: z.string().optional(),
+    color: z.string().min(1, { message: "Colour is required" }),
+    sizes: z.array(variantSizeSchema).min(1, { message: "Add at least one size row" }),
+    thumbnail: z.string().url({ message: "Thumbnail URL is required" }),
+    gallery: z
+      .array(z.string().url({ message: "Invalid image URL" }))
+      .max(4, { message: "Up to 4 gallery images" })
+      .optional(),
+  });
 
 /* ───── product ───── */
 export const productSchema = z.object({
@@ -32,8 +33,7 @@ export const productSchema = z.object({
   occasion: z.string().min(1, { message: "Occasion is required" }),
   patternAndPrint: z.string().min(1, { message: "Pattern is required" }),
   style: z.string().min(1, { message: "Style is required" }),
-  dateAdded: z.string().datetime().optional(),
-
+  option: z.string().min(1, { message: "Style is required" }),
   variants: z.array(variantSchema).min(1, { message: "Add at least one variant" }),
 });
 

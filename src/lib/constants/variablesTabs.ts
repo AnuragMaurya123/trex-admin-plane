@@ -1,5 +1,5 @@
 import { variablesFormValues } from "@/validationSchema/variablesSchema";
-import { Calendar, Package, Palette, Ruler, Shirt, Tag } from "lucide-react";
+import { Calendar, Package, Palette, Ruler, Shirt, Tag, Wrench } from "lucide-react";
 
 export const fieldConfig = [
   { key: "catergory" as keyof variablesFormValues, label: "Category", icon: Package, description: "Main product categories" },
@@ -20,4 +20,10 @@ export const fieldConfig = [
   { key: "style" as keyof variablesFormValues, label: "Styles", icon: Shirt, description: "Fashion styles and trends" },
   { key: "sizes" as keyof variablesFormValues, label: "Sizes", icon: Ruler, description: "Available size options" },
   { key: "fabric" as keyof variablesFormValues, label: "Fabric", icon: Ruler, description: "Available fabric options" },
+   {
+    key: "option", // ✅ ADD THIS
+    label: "Options",
+    icon: Wrench,
+    description: "Custom variant options like neck, sleeve, fit, etc.",
+  },
 ]

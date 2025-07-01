@@ -31,7 +31,6 @@ import { useCreateProduct } from "@/hooks/useCreateProduct";
 import { useUpdateProduct } from "@/hooks/useUpdateProduct";
 import ProductBasics from "./form-components/product-basics";
 import VariantCard from "./variant-card";
-import type { NewProduct } from "@/lib/types/reactComponentsProps";
 import { useGetVariable } from "@/hooks/useGetVariable";
 import { AxiosError } from "axios";
 import Link from "next/link";
@@ -90,7 +89,7 @@ export default function ProductDialog({
 
   const watchedVariants = watch("variants");
   const {
-    mutate: createProduct,
+    mutate:   createProduct,
     isPending: creating,
   } = useCreateProduct();
 
@@ -110,6 +109,9 @@ export default function ProductDialog({
       ? error.response?.data.message
       : "An error occurred";
 
+      console.log("Variable data:", variable);
+      
+
   const categoryOptions = variable?.catergory ?? [];
   const subCategoryOptions = variable?.subCatergory ?? [];
   const fabricOptions = variable?.fabric ?? [];
@@ -117,6 +119,7 @@ export default function ProductDialog({
   const patternOptions = variable?.patternAndPrint ?? [];
   const styleOptions = variable?.style ?? [];
   const colorOptions = variable?.color ?? [];
+  const option = variable?.option ?? [];
 
   if (isLoadingVariable)
     return <div className="p-6">Loading product configuration...</div>;
@@ -153,12 +156,12 @@ export default function ProductDialog({
       }
     );
   } else {
-    const payload: NewProduct = {
+    const payload: Product = {
       ...data,
-      dateAdded: new Date().toISOString(),
       subcategory: data.subcategory,
       variants,
       description: data.description ?? "",
+      options: data.option ? JSON.stringify(data.option) : undefined,
     };
     createProduct(payload, {
       onSuccess: () => {
@@ -221,6 +224,7 @@ export default function ProductDialog({
               occasionOptions={occasionOptions}
               patternOptions={patternOptions}
               styleOptions={styleOptions}
+              option={option}
             />
 
             <div>
