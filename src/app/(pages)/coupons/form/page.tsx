@@ -29,9 +29,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 
 import { toast } from "react-toastify"
 import { CouponFormData, couponSchema } from "@/validationSchema/couponSchema"
-import { useAddCoupon } from "@/hooks/useAddCoupon"
-import { useUpdateCoupon } from "@/hooks/useUpdateCoupon"
-import { useGetCoupons } from "@/hooks/useGetCoupons"
+import { useAddCoupon } from "@/hooks/coupon/useAddCoupon"
+import { useUpdateCoupon } from "@/hooks/coupon/useUpdateCoupon"
+import { useGetCoupons } from "@/hooks/coupon/useGetCoupons"
 
 export default function CouponForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)

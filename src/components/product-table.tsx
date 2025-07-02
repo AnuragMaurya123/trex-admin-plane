@@ -18,7 +18,7 @@ import { Product } from "@/lib/types/productType";
 import { VariantsDialog } from "./variants-dialog";
 import { useHasMounted } from "@/lib/useHasMounted";
 import PageLoading from "./page-loading";
-import { useDeleteProduct } from "@/hooks/useDeleteProduct";
+import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 

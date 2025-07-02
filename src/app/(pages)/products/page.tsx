@@ -24,14 +24,14 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-import { useGetAllProducts } from "@/hooks/useGetProduct";
+import { useGetAllProducts } from "@/hooks/product/useGetProduct";
 import { useHasMounted } from "@/lib/useHasMounted";
 import { CenteredGradientCard } from "@/components/centered-gradient-card";
 import PageLoading from "@/components/page-loading";
 import PageError from "@/components/page-error";
 import { useDebounce } from "use-debounce";
 import { Product } from "@/lib/types/productType";
-import { useGetVariable } from "@/hooks/useGetVariable";
+import { useGetVariable } from "@/hooks/variable/useGetVariable";
 
 /* ----------------------------------------------------------- */
 /* helpers                                                     */

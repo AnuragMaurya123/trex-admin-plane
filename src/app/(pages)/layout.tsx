@@ -3,7 +3,7 @@
 import { useState, ReactNode, useEffect } from "react";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { useCurrentAdmin } from "@/hooks/admin/useCurrentAdmin";
 import { useRouter } from "next/navigation";
 import PageLoading from "@/components/page-loading";
 import PageError from "@/components/page-error";

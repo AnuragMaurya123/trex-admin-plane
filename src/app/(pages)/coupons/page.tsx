@@ -44,8 +44,8 @@ import {
 import type { Coupon } from "@/lib/types/couponType"
 import KPICard from "@/components/kpl-card"
 import { toast } from "react-toastify"
-import { useGetCoupons } from "@/hooks/useGetCoupons"
-import { useDeleteCoupon } from "@/hooks/useDeleteCoupon"
+import { useGetCoupons } from "@/hooks/coupon/useGetCoupons"
+import { useDeleteCoupon } from "@/hooks/coupon/useDeleteCoupon"
 import PageLoading from "@/components/page-loading"
 
 const getStatusColor = (status: string) => {

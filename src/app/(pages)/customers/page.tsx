@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
-import { useGetAllUsers } from "@/hooks/useGetAllUser";
+import { useGetAllUsers } from "@/hooks/users/useGetAllUser";
 import type { ExtendedUser } from "@/lib/types/userType";
 import PageLoading from "@/components/page-loading";
 import PageError from "@/components/page-error";

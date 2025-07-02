@@ -4,8 +4,8 @@ import React from "react";
 import ModeToggle from "./mode-toggle";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
-import { useLogout } from "@/hooks/useLogout";
-import { useCurrentAdmin } from "@/hooks/useCurrentAdmin";
+import { useLogout } from "@/hooks/admin/useLogout";
+import { useCurrentAdmin } from "@/hooks/admin/useCurrentAdmin";
 
 export default function Header() {
   const { mutate: logout } = useLogout();

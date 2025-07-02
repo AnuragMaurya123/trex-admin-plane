@@ -47,8 +47,8 @@ import PageLoading from "./page-loading";
 import PageError from "./page-error";
 import { useDebounce } from "use-debounce";
 import { toast } from "react-toastify";
-import { useGetDeliveryPartners } from "@/hooks/useGetDeliveryPartner";
-import { useDeleteDeliveryPartner } from "@/hooks/useDeleteDeliveryPartner";
+import { useGetDeliveryPartners } from "@/hooks/delivery-partner/useGetDeliveryPartner";
+import { useDeleteDeliveryPartner } from "@/hooks/delivery-partner/useDeleteDeliveryPartner";
 
 const getStatusColor = (status: string) => {
   switch (status) {

@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductFormValues } from "@/validationSchema/productSchema";
 import { useFormContext } from "react-hook-form";
-import { useGetVariable } from "@/hooks/useGetVariable";
+import { useGetVariable } from "@/hooks/variable/useGetVariable";
 
 export default function SizeSection({
   idx,

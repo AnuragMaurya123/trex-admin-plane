@@ -11,7 +11,7 @@ import { AdminLoginInput, adminLoginSchema } from "@/validationSchema/loginSchem
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
-import { useLogin } from "@/hooks/useLogin";
+import { useLogin } from "@/hooks/admin/useLogin";
 
 export default function LoginForm() {
   const router = useRouter();

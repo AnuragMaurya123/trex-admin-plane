@@ -27,11 +27,11 @@ import {
 } from "@/validationSchema/productSchema";
 import { EMPTY_VARIANT } from "@/lib/constants/productVariantDefaultValue";
 import { mapVariantToPayload } from "@/helper/stringOrUndefinedEnum";
-import { useCreateProduct } from "@/hooks/useCreateProduct";
-import { useUpdateProduct } from "@/hooks/useUpdateProduct";
+import { useCreateProduct } from "@/hooks/product/useCreateProduct";
+import { useUpdateProduct } from "@/hooks/product/useUpdateProduct";
 import ProductBasics from "./form-components/product-basics";
 import VariantCard from "./variant-card";
-import { useGetVariable } from "@/hooks/useGetVariable";
+import { useGetVariable } from "@/hooks/variable/useGetVariable";
 import { AxiosError } from "axios";
 import Link from "next/link";
 import { toast } from "react-toastify";

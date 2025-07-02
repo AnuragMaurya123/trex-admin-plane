@@ -15,10 +15,10 @@ import { Separator } from "@/components/ui/separator"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { DeliveryPartnerFormData, deliveryPartnerSchema, } from "@/validationSchema/deliveryPartnerSchema"
 import { toast } from "react-toastify"
-import { useAddDeliveryPartner } from "@/hooks/useAddDeliveryPartner"
-import { useUpdateDeliveryPartner } from "@/hooks/useUpdateDeliveryPartner"
+import { useAddDeliveryPartner } from "@/hooks/delivery-partner/useAddDeliveryPartner"
+import { useUpdateDeliveryPartner } from "@/hooks/delivery-partner/useUpdateDeliveryPartner"
 import { DeliveryPartners } from "@/lib/types/orderType"
-import { useGetDeliveryPartners } from "@/hooks/useGetDeliveryPartner"
+import { useGetDeliveryPartners } from "@/hooks/delivery-partner/useGetDeliveryPartner"
 
 // Indian states for the dropdown
 const indianStates = [

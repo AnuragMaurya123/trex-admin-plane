@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetVariable } from "@/hooks/useGetVariable";
+import { useGetVariable } from "@/hooks/variable/useGetVariable";
 import PageLoading from "./page-loading";
 import PageError from "./page-error";
 import {
@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-toastify";
 import { Variables } from "@/lib/types/variablesType";
-import { useDeleteVariableOption } from "@/hooks/useDeleteVariableOption";
+import { useDeleteVariableOption } from "@/hooks/variable/useDeleteVariableOption";
 
 const categoryConfig = [
   { key: "catergory", label: "Categories", icon: Package, color: "bg-blue-500" },

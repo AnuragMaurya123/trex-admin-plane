@@ -9,8 +9,8 @@ async function updateCoupon({
   id: string;
   data: Partial<CouponFormData>;
 }): Promise<Coupon> {
-  const response = await axios.patch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/coupons/${id}`,
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/coupon/${id}`,
     data,
     { withCredentials: true }
   );

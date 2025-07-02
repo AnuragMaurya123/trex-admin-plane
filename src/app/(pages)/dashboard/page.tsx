@@ -11,9 +11,9 @@ import {
 import StatCard from "@/components/stat-card";
 import { TopProductTable } from "@/components/top-product-table";
 import { dummyProducts } from "@/lib/constants/dashboardSliderData";
-import { useGetStatsData } from "@/hooks/useGetStatsData";
-import { useGetPieStatsData } from "@/hooks/useGetPieStatsData";
-import { useGetEarningData } from "@/hooks/useGetEarningData";
+import { useGetStatsData } from "@/hooks/dashboard/useGetStatsData";
+import { useGetPieStatsData } from "@/hooks/dashboard/useGetPieStatsData";
+import { useGetEarningData } from "@/hooks/dashboard/useGetEarningData";
 import PageError from "@/components/page-error";
 import PageLoading from "@/components/page-loading";
 import GraphDiagram from "@/components/graph-diagram";

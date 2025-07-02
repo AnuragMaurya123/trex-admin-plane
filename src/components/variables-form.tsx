@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { fieldConfig } from "@/lib/constants/variablesTabs";
 import { isAxiosError } from "axios";
 import { toast } from "react-toastify";
-import { useAddVariables } from "@/hooks/useAddVariable";
+import { useAddVariables } from "@/hooks/variable/useAddVariable";
 
 export default function VariablesForm() {
   const { mutateAsync: addVariables, isPending } = useAddVariables();
