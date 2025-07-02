@@ -1,25 +1,25 @@
     import { useMutation, useQueryClient } from "@tanstack/react-query";
     import axios from "axios";
 
-    export async function deleteDistributor(distributorId: string): Promise<void> {
+    export async function deleteDeliveryPartner(DeliveryPartnerId: string): Promise<void> {
     const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL!}/distributors/${distributorId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL!}/deliveryPartners/${DeliveryPartnerId}`,
         { withCredentials: true }
     );
 
     if (!response || response.status !== 200) {
-        throw new Error("Failed to delete distributor");
+        throw new Error("Failed to delete Delivery Partner");
     }
     }
 
     // Custom mutation hook
-    export function useDeleteDistributor() {
+    export function useDeleteDeliveryPartner() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: deleteDistributor,
+        mutationFn: deleteDeliveryPartner,
         onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["distributors"] });
+        queryClient.invalidateQueries({ queryKey: ["deliverypartners"] });
         },
         onError: (error) => {
         console.error("Delete error:", error);

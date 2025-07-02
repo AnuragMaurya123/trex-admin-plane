@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/tabs";
 
 import VariablesSetting from "./variables-setting";
-import DistributorsSetting from "./distributors-setting";
+import DeliveryPartner from "./delivery-partner-setting";
+
 
 export default function TabsSettings() {
   return (
@@ -28,19 +29,19 @@ export default function TabsSettings() {
               Product Settings
             </h1>
             <p className="text-slate-600 dark:text-slate-400 mt-2 text-lg">
-              Manage your product variables and distributors
+              Manage your product variables and Delivery Partners here.
             </p>
           </div>
         </div>
       </div>
 
-      <Card className="shadow-xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+      <Card className="shadow-xl pt-0 border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
         <CardHeader className="bg-gradient-to-r from-purple-500/10 via-violet-500/10 to-indigo-500/10 border-b border-purple-200/30 dark:border-purple-700/30 pt-4">
           <CardTitle className="text-2xl text-slate-800 dark:text-slate-200">
             Settings Management
           </CardTitle>
           <CardDescription className="text-slate-600 dark:text-slate-400">
-            Add and organize your product variables and distributor info
+            Add and organize your product variables and delivery partners here.
           </CardDescription>
         </CardHeader>
 
@@ -57,19 +58,20 @@ export default function TabsSettings() {
               </TabsTrigger>
 
               <TabsTrigger
-                value="distributor"
+                value="deliveryPartner"
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600
                  data-[state=active]:text-white px-6 py-2 rounded-lg text-sm font-medium"
               >
-                Distributors
+              Delivery Partner
               </TabsTrigger>
+             
             </TabsList>
 
             {/* Variables Tab Content */}
            <VariablesSetting value="variables" />
 
-            {/* Distributor Tab Content */}
-           <DistributorsSetting value="distributor" />
+            {/* Delivery Partner Tab Content */}
+           <DeliveryPartner value="deliveryPartner" />
           </Tabs>
         </CardContent>
       </Card>

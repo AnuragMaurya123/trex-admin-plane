@@ -1,6 +1,6 @@
-import { Distributor, Order } from "../types/orderType"
+import { DeliveryPartners, Order } from "../types/orderType"
 
-export const mockDistributors: Distributor[] = [
+export const mockDeliveryPartners: DeliveryPartners[] = [
   {
     _id: "dist-001",
     name: "FastTrack Logistics",
@@ -144,7 +144,7 @@ export const mockOrders: Order[] = [
       country: "USA",
       phone: "+1-555-0456",
     },
-    assignedDistributor: mockDistributors[1],
+    assignedDeliveryPartner: mockDeliveryPartners[1],
     assignedDate: "2024-01-19T09:00:00Z",
     orderDate: "2024-01-18T14:15:00Z",
     createdAt: "2024-01-18T14:15:00Z",
@@ -202,7 +202,7 @@ export const mockOrders: Order[] = [
       country: "USA",
       phone: "+1-555-0789",
     },
-    assignedDistributor: mockDistributors[2],
+    assignedDeliveryPartner: mockDeliveryPartners[2],
     assignedDate: "2024-01-17T08:30:00Z",
     orderDate: "2024-01-16T09:45:00Z",
     createdAt: "2024-01-16T09:45:00Z",

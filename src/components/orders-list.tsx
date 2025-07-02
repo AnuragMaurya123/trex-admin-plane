@@ -129,10 +129,10 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {order.assignedDistributor ? (
+                        {order.assignedDeliveryPartner ? (
                           <div className="text-sm">
-                            <div className="font-medium text-purple-900">{order.assignedDistributor.name}</div>
-                            <div className="text-purple-600">{order.assignedDistributor.city}</div>
+                            <div className="font-medium text-purple-900">{order.assignedDeliveryPartner.name}</div>
+                            <div className="text-purple-600">{order.assignedDeliveryPartner.city}</div>
                           </div>
                         ) : (
                           <Badge variant="outline" className="text-gray-500">Unassigned</Badge>
@@ -213,7 +213,7 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                                   </div>
 
                                   {/* Distributor Info */}
-                                  {selectedOrder.assignedDistributor && (
+                                  {selectedOrder.assignedDeliveryPartner && (
                                     <>
                                       <Separator className="bg-purple-200" />
                                       <Card className="bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200">
@@ -226,20 +226,20 @@ export default function OrdersListTab({getStatusColor,orders}: OrdersListTabProp
                                         <CardContent className="space-y-2 text-sm">
                                           <p>
                                             <strong className="text-orange-700">Name:</strong>{" "}
-                                            {selectedOrder.assignedDistributor.name}
+                                            {selectedOrder.assignedDeliveryPartner.name}
                                           </p>
                                           <p>
                                             <strong className="text-orange-700">Email:</strong>{" "}
-                                            {selectedOrder.assignedDistributor.email}
+                                            {selectedOrder.assignedDeliveryPartner.email}
                                           </p>
                                           <p>
                                             <strong className="text-orange-700">Phone:</strong>{" "}
-                                            {selectedOrder.assignedDistributor.phone}
+                                            {selectedOrder.assignedDeliveryPartner.phone}
                                           </p>
                                           <p>
                                             <strong className="text-orange-700">Location:</strong>{" "}
-                                            {selectedOrder.assignedDistributor.city},{" "}
-                                            {selectedOrder.assignedDistributor.state}
+                                            {selectedOrder.assignedDeliveryPartner.city},{" "}
+                                            {selectedOrder.assignedDeliveryPartner.state}
                                           </p>
                                           {selectedOrder.assignedDate && (
                                             <p>

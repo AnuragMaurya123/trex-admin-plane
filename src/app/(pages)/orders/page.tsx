@@ -14,7 +14,7 @@ import KPICard from "@/components/kpl-card"
 
 import { mockOrders } from "@/lib/constants/ordersData"
 import OrdersListTab from "@/components/orders-list"
-import DistributorAssignment from "@/components/distributor-assignment"
+import DistributorAssignment from "@/components/delivery-partner-assignment"
 
 
 

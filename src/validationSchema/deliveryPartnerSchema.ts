@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const distributorSchema = z.object({
+export const deliveryPartnerSchema = z.object({
   _id: z.string().optional(),
   name: z
     .string()
@@ -33,4 +33,4 @@ export const distributorSchema = z.object({
   }),
 })
 
-export type DistributorFormData = z.infer<typeof distributorSchema>
+export type DeliveryPartnerFormData = z.infer<typeof deliveryPartnerSchema>

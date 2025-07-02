@@ -2,7 +2,7 @@
 import { Product, ProductVariantType } from "./productType";
 
 
-export interface Distributor {
+export interface DeliveryPartners {
   _id: string;
   name: string;
   email: string;
@@ -61,7 +61,7 @@ export interface Order {
   orderStatusUpdate:OrderStatusUpdate;
   paymentMethod: string;
   shippingAddress: ShippingAddress;
-  assignedDistributor?: Distributor;
+  assignedDeliveryPartner?: DeliveryPartners;
   assignedDate?: string;
   paymentDetails?: PaymentDetails;
   orderDate: string;

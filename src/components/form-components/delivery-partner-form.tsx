@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,12 +13,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { distributorSchema, type DistributorFormData } from "@/validationSchema/distributorSchema"
+import { DeliveryPartnerFormData, deliveryPartnerSchema, } from "@/validationSchema/deliveryPartnerSchema"
 import { toast } from "react-toastify"
-import { useAddDistributor } from "@/hooks/useAddDistributor"
-import { useGetDistributors } from "@/hooks/useGetDistributor"
-import { useUpdateDistributor } from "@/hooks/useUpdateDistributor"
-import { Distributor } from "@/lib/types/orderType"
+import { useAddDeliveryPartner } from "@/hooks/useAddDeliveryPartner"
+import { useUpdateDeliveryPartner } from "@/hooks/useUpdateDeliveryPartner"
+import { DeliveryPartners } from "@/lib/types/orderType"
+import { useGetDeliveryPartners } from "@/hooks/useGetDeliveryPartner"
 
 // Indian states for the dropdown
 const indianStates = [
@@ -55,21 +55,22 @@ const indianStates = [
   "Ladakh",
 ]
 
-interface DistributorFormProps {
-  distributorId?: string
+interface DeliveryPartnerFormProps {
+ deliverypartnerId?: string
   onDone?: () => void
 }
 
-export default function DistributorForm({ distributorId}: DistributorFormProps) {
+export default function DeliveryPartnerForm({ deliverypartnerId}: DeliveryPartnerFormProps) {
+  
   const [isSubmitting, setIsSubmitting] = useState(false)
   const searchParams = useSearchParams()
 
-  // Get distributor ID from URL params if not passed as prop
-  const id = distributorId || searchParams.get("id")
+  // Get the delivery partner ID from props or search params
+  const id = deliverypartnerId || searchParams.get("id")
   const isEditMode = !!id
 
-  const form = useForm<DistributorFormData>({
-    resolver: zodResolver(distributorSchema),
+  const form = useForm<DeliveryPartnerFormData>({
+    resolver: zodResolver(deliveryPartnerSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -85,56 +86,52 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
   const watchedValues = form.watch()
 
   // Hooks for API operations
-  const { mutateAsync: addDistributor } = useAddDistributor()
-  const { mutateAsync: updateDistributor } = useUpdateDistributor()
-  
-  // Fixed: Only fetch distributor data when in edit mode and ID exists
-  // Assuming useGetDistributors should be useGetDistributor (singular) that takes an ID
-  const { data: distributors, isLoading: isLoadingDistributor } = useGetDistributors()
-  
-  // Find the specific distributor from the list
- const existingDistributor = isEditMode && distributors && id 
-  ? distributors.find((dist: Distributor) => dist._id.toString() === id.toString())
-  : null;
+  const { mutateAsync: addDeliveryPartner } = useAddDeliveryPartner()
+  const { mutateAsync: updateDeliveryPartner } = useUpdateDeliveryPartner()
 
+  const { data: deliveryPartners, isLoading: isLoadingDeliveryPartners } = useGetDeliveryPartners()
   
-    
+const existingDeliveryPartner = useMemo(() => {
+  if (isEditMode && deliveryPartners && id) {
+    return deliveryPartners.find((dist: DeliveryPartners) => dist._id.toString() === id.toString());
+  }
+  return null;
+}, [isEditMode, deliveryPartners, id]);
 
-  // Populate form with existing data when editing
-  useEffect(() => {
-    if (isEditMode && existingDistributor) {
-      form.reset({
-        name: existingDistributor.name || "",
-        email: existingDistributor.email || "",
-        phone: existingDistributor.phone || "",
-        address: existingDistributor.address || "",
-        city: existingDistributor.city || "",
-        state: existingDistributor.state || "",
-        capacity: existingDistributor.capacity || 0,
-        status: existingDistributor.status || "active",
-      })
-    }
-  }, [existingDistributor, form, isEditMode])
+useEffect(() => {
+  if (existingDeliveryPartner) {
+    form.reset({
+      name: existingDeliveryPartner.name,
+      email: existingDeliveryPartner.email,
+      phone: existingDeliveryPartner.phone,
+      address: existingDeliveryPartner.address,
+      city: existingDeliveryPartner.city,
+      state: existingDeliveryPartner.state,
+      capacity: existingDeliveryPartner.capacity,
+      status: existingDeliveryPartner.status,
+    });
+  }
+}, [existingDeliveryPartner, form]);
 
-  const onSubmit = async (data: DistributorFormData) => {
+  const onSubmit = async (data: DeliveryPartnerFormData) => {
     setIsSubmitting(true)
     try {
       if (isEditMode && id) {
-        // Update existing distributor
-        await updateDistributor({ id, ...data })
-        toast.success("Distributor updated successfully!")// Redirect to list page
+        // Update existing Delivery Partner
+        await updateDeliveryPartner({ id, ...data })
+        toast.success("Delivery Partner updated successfully!")// Redirect to list page
       } else {
-        // Create new distributor
-        await addDistributor(data)
-        toast.success("Distributor created successfully!")
+        // Create new Delivery Partner
+        await addDeliveryPartner(data)
+        toast.success("Delivery Partner created successfully!")
         form.reset() // Reset form for new entry
       }
     } catch (error) {
       console.error(error)
       toast.error(
         isEditMode
-          ? "Failed to update distributor. Please try again."
-          : "Failed to create distributor. Please try again.",
+          ? "Failed to update Delivery Partner. Please try again."
+          : "Failed to create Delivery Partner. Please try again.",
       )
     } finally {
       setIsSubmitting(false)
@@ -142,17 +139,17 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
   }
 
   const handleReset = () => {
-    if (isEditMode && existingDistributor) {
+    if (isEditMode && existingDeliveryPartner) {
       // Reset to original values when editing
       form.reset({
-        name: existingDistributor.name || "",
-        email: existingDistributor.email || "",
-        phone: existingDistributor.phone || "",
-        address: existingDistributor.address || "",
-        city: existingDistributor.city || "",
-        state: existingDistributor.state || "",
-        capacity: existingDistributor.capacity || 0,
-        status: existingDistributor.status || "active",
+        name: existingDeliveryPartner.name || "",
+        email: existingDeliveryPartner.email || "",
+        phone: existingDeliveryPartner.phone || "",
+        address: existingDeliveryPartner.address || "",
+        city: existingDeliveryPartner.city || "",
+        state: existingDeliveryPartner.state || "",
+        capacity: existingDeliveryPartner.capacity || 0,
+        status: existingDeliveryPartner.status || "active",
       })
     } else {
       // Reset to empty values when creating
@@ -171,29 +168,29 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
 
 
 
-  // Show loading state when fetching distributor data for edit
-  if (isEditMode && isLoadingDistributor) {
+  // Show loading state when fetching DeliveryPartner data for edit
+  if (isEditMode && isLoadingDeliveryPartners) {
     return (
       <div className="min-h-screen bg-muted/40 p-4 sm:p-6 lg:p-8 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
             <div className="w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-slate-600">Loading distributor data...</p>
+            <p className="text-slate-600">Loading Delivery Partners data...</p>
           </CardContent>
         </Card>
       </div>
     )
   }
 
-  // Show error state if in edit mode but distributor not found
-  if (isEditMode && !isLoadingDistributor && !existingDistributor) {
+  // Show error state if in edit mode but DeliveryPartner not found
+  if (isEditMode && !isLoadingDeliveryPartners && !existingDeliveryPartner) {
     return (
       <div className="min-h-screen bg-muted/40 p-4 sm:p-6 lg:p-8 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
             <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">Distributor Not Found</h3>
-            <p className="text-slate-600 mb-4">The distributor you&apos;re trying to edit doesn&apos;t exist.</p>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Delivery Partner Not Found</h3>
+            <p className="text-slate-600 mb-4">The Delivery Partner you&apos;re trying to edit doesn&apos;t exist.</p>
             
           </CardContent>
         </Card>
@@ -207,12 +204,12 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
       <header className="mb-8">
        
         <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-          {isEditMode ? "Edit Distributor" : "Add New Distributor"}
+          {isEditMode ? "Edit Delivery Partner" : "Add New Delivery Partner"}
         </h1>
         <p className="text-sm bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
           {isEditMode
-            ? "Update distributor information and settings"
-            : "Create a new distributor profile for order management"}
+            ? "Update Delivery Partner information and settings"
+            : "Create a new Delivery Partner profile for order management"}
         </p>
       </header>
 
@@ -236,10 +233,10 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-purple-700 font-medium">Distributor Name *</FormLabel>
+                        <FormLabel className="text-purple-700 font-medium">Delivery Partner Name *</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter distributor name"
+                            placeholder="Enter Delivery Partner name"
                             className="bg-white border-purple-200 focus-visible:ring-purple-500"
                             {...field}
                           />
@@ -309,7 +306,7 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
                         <FormControl>
                           <Input
                             type="email"
-                            placeholder="distributor@example.com"
+                            placeholder="DeliveryPartner@example.com"
                             className="bg-white border-blue-200 focus-visible:ring-blue-500"
                             {...field}
                           />
@@ -464,7 +461,7 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
                         {form.formState.errors.capacity && <XCircle className="h-3 w-3" />}
                       </FormMessage>
                       <p className="text-sm text-orange-600">
-                        This represents the maximum number of orders this distributor can handle simultaneously.
+                        This represents the maximum number of orders this DeliveryPartner can handle simultaneously.
                       </p>
                     </FormItem>
                   )}
@@ -543,7 +540,7 @@ export default function DistributorForm({ distributorId}: DistributorFormProps) 
                 ) : (
                   <div className="flex items-center gap-2">
                     {isEditMode ? <Edit className="h-4 w-4" /> : <Save className="h-4 w-4" />}
-                    {isEditMode ? "Update Distributor" : "Create Distributor"}
+                    {isEditMode ? "Update Delivery Partner" : "Create Delivery Partner"}
                   </div>
                 )}
               </Button>

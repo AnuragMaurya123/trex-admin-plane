@@ -1,4 +1,4 @@
-import { Distributor, Order } from "./orderType";
+import { DeliveryPartners, Order } from "./orderType";
 import { Product, ProductVariantType } from "./productType";
 
 export  interface User {
@@ -55,7 +55,7 @@ export interface ExtendedUser extends Omit<User, "orders"> {
       country: string;
       phone: string;
     };
-    assignedDistributor?: Distributor;
+    assignedDeliveryPartner?: DeliveryPartners;
     assignedDate?: string;
     paymentDetails?: {
       razorpayOrderId: string;

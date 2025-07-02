@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import DistributorForm from "./form-components/distributor-form";
-import DistributorList from "./distributor-list";
+import DeliveryPartnerForm from "./form-components/delivery-partner-form";
+import DeliveryPartnerList from "./delivery-partner-list";
 
-export default function DistributorsSetting({ value }: { value: string }) {
+export default function DeliveryPartner({ value }: { value: string }) {
   const [tab, setTab] = useState<"form" | "list">("form");
-  const [editDistributorId, setEditDistributorId] = useState<string | null>(null);
+  const [editDeliveryPartnerId, setEditDeliveryPartnerId] = useState<string | null>(null);
 
   return (
     <TabsContent value={value} className="space-y-6">
@@ -15,30 +15,30 @@ export default function DistributorsSetting({ value }: { value: string }) {
             value="form"
             className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-2 rounded-lg text-sm font-medium"
           >
-            Add Distributor
+            {editDeliveryPartnerId ? "Edit Delivery Partner" : "Add New Delivery Partner"}
           </TabsTrigger>
           <TabsTrigger
             value="list"
             className="data-[state=active]:bg-purple-600 data-[state=active]:text-white px-6 py-2 rounded-lg text-sm font-medium"
           >
-            List Distributors
+            List Delivery Partners
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="form">
-          <DistributorForm
-            distributorId={editDistributorId!}
+          <DeliveryPartnerForm
+            deliverypartnerId={editDeliveryPartnerId!} // ✅ fixed camelCase prop name
             onDone={() => {
-              setEditDistributorId(null);
+              setEditDeliveryPartnerId(null);
               setTab("list");
             }}
           />
         </TabsContent>
 
         <TabsContent value="list">
-          <DistributorList
-            onEditDistributor={(id: string) => {
-              setEditDistributorId(id);
+          <DeliveryPartnerList
+            onEditDeliveryPartner={(id: string) => {
+              setEditDeliveryPartnerId(id);
               setTab("form");
             }}
           />

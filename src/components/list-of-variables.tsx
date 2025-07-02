@@ -49,8 +49,6 @@ const categoryConfig = [
 export default function ListOfVariables() {
   const { data: variable, isLoading, isError, refetch } = useGetVariable();
   const { mutateAsync: deleteOption, isPending: isDeletingOption } = useDeleteVariableOption();
-  console.log("Variable Data:", variable);
-  
 
   const variableData = variable as Variables;
 
