@@ -106,6 +106,7 @@ export default function CouponForm() {
         // Create new coupon
         await addCoupon(formattedData)
         toast.success("Coupon created successfully!")
+        router.push("/coupons") // Redirect to list page
         form.reset() // Reset form for new entry
       }
     } catch (error) {
